@@ -9,7 +9,7 @@ Map params = pipelineInitializer.setup("MAVEN-OPENSHIFT", env, [
 ])
 
 
-params.technology.agent.build.image = "lin-maven-openshift-java-11"
+params.technology.agent.build.image = "img-maven-java-11"
 
 params.stages.build.saveArtifacts.postStageContent = {
    
