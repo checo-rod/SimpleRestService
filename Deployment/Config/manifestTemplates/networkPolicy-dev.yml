@@ -1,0 +1,35 @@
+# Authorization Service
+- to:
+  - podSelector: 
+      matchLabels:
+        app: authorization
+  ports: 
+  - protocol: TCP
+    port: 8080
+
+# Logging Service
+- to:
+  - podSelector: 
+      matchLabels:
+        app: logging
+  ports: 
+  - protocol: TCP
+    port: 8080
+
+- to:
+    - ipBlock:
+        cidr: 0.0.0.0/0
+  ports:
+    - protocol: TCP
+      port: 80
+    - protocol: TCP
+      port: 443
+
+# AdminServer Service
+- to:
+  - podSelector: 
+      matchLabels:
+        app: adminserver
+  ports: 
+  - protocol: TCP
+    port: 8080

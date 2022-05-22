@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Configuration monitorInterval="10">
+
+	<Properties>
+		<Property name="logLevel">INFO</Property>
+	</Properties>
+	
+	<Appenders>
+        <Console name="CONSOLE" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n">
+				<alwaysWriteExceptions>true</alwaysWriteExceptions>
+			</PatternLayout>
+        </Console>
+
+	</Appenders>
+	<Loggers>
+
+		<AsyncRoot level="${logLevel}">
+			<AppenderRef ref="CONSOLE" />
+		</AsyncRoot>
+	</Loggers>
+
+</Configuration>

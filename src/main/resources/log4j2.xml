@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Configuration monitorInterval="10">
+
+	<Properties>
+		<Property name="logLevel">INFO</Property>
+		<Property name="LOG_DIR">${env:TEMP}</Property>
+	</Properties>
+
+	<Appenders>
+		<!-- <Http name="im-java-logging" url="${sys:IM_JAVA_LOGGING_URL}" method="POST"> 
+			<Property name="${sys:IM_JAVA_LOGGING_APIKEY_NAME}" value="${sys:IM_JAVA_LOGGING_APIKEY_VALUE}" 
+			/> <Property name="X-Java-Runtime" value="$${java:runtime}" /> <Property 
+			name="Content-Type" value="application/json" /> <Property name="accept" value="*/*" 
+			/> <JsonTemplateLayout eventTemplateUri="classpath:logLayout.json"/> </Http> -->
+		<Console name="BCLC_CONSOLE" target="SYSTEM_OUT">
+			<JsonTemplateLayout
+				eventTemplateUri="classpath:logLayout.json" />
+		</Console>
+
+		<Console name="CONSOLE" target="SYSTEM_OUT">
+			<PatternLayout
+				pattern="%d{yyyy-MM-dd'T'HH:mm:ss.SSS-07:00} [%t] %-5level %logger{36} - %msg%n">
+				<alwaysWriteExceptions>true</alwaysWriteExceptions>
+			</PatternLayout>
+		</Console>
+
+		<!-- <RollingFile name="rollingFile" fileName="${LOG_DIR}/application.log" 
+			filePattern="${LOG_DIR}/application.%i.log.gz" ignoreExceptions="false"> 
+			<PatternLayout pattern="%d{yyyy-MM-dd'T'HH:mm:ss.SSS-07:00} [%t] %-5level 
+			%logger{36} - %msg%n"> <alwaysWriteExceptions>true</alwaysWriteExceptions> 
+			</PatternLayout> <Policies> <SizeBasedTriggeringPolicy size="10MB"/> </Policies> 
+			<DefaultRolloverStrategy max="1"/> </RollingFile> -->
+
+	</Appenders>
+	<Loggers>
+
+		<AsyncLogger
+			name="com.bclc.lottery.client.AuthorizationClient" level="OFF"
+			additivity="false">
+			<AppenderRef ref="BCLC_CONSOLE" />
+			<AppenderRef ref="im-java-logging" />
+			<AppenderRef ref="rollingFile" />
+		</AsyncLogger>
+
+		<AsyncLogger name="com.bclc" level="${logLevel}"
+			additivity="false">
+			<AppenderRef ref="BCLC_CONSOLE" />
+			<AppenderRef ref="im-java-logging" />
+			<AppenderRef ref="rollingFile" />
+		</AsyncLogger>
+
+
+		<AsyncRoot level="${logLevel}">
+			<AppenderRef ref="CONSOLE" />
+			<AppenderRef ref="rollingFile" />
+		</AsyncRoot>
+	</Loggers>
+
+</Configuration>
