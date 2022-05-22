@@ -1,11 +1,10 @@
 @Library(["jk-pipeline-common-library", "jk-pipeline-common-pipeline"]) _ // import libraries
 
 Map params = pipelineInitializer.setup("MAVEN-OPENSHIFT", env, [
-  appName         : "createorder",
-  gitRepo         : "im-java-createorder",
+  appName         : "SimpleRestService",
+  gitRepo         : "SimpleRestService",
+  
   projectName     : "LotteryServices",
-  hasCLEConfig    : false,
-  hasEMSConfig    : false,
   cleanTempFiles  : true
 ])
 
