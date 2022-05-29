@@ -1,6 +1,5 @@
-FROM centos:centos7
-#FROM openjdk:10
-MAINTAINER Steve Hartley <shartley@bclc.com>
+FROM docker-registry.checorod.com:1336/infra/img-java-runtime-11:latest
+MAINTAINER Sergio Rodriguez (srodriguez@checorod.com)
 
 # ------------------------
 # Install Java, telnet
