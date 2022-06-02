@@ -1,0 +1,13 @@
+@Library(["jk-pipeline-common-library", "jk-pipeline-common-pipeline"]) _ // import libraries
+
+Map params = pipelineInitializer.setup("MAVEN-OPENSHIFT", env, [
+  appName         : "SimpleRestService",
+  gitRepo         : "SimpleRestService",
+  
+  projectName     : "LotteryServices",
+  cleanTempFiles  : true
+])
+
+params.technology.agent.build.image = "img-maven-java-11"
+  
+pipelineInitializer.runPipeline(params)
