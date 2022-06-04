@@ -4,4 +4,4 @@ Map params = pipelineInitializer.setup("SPRINGBOOT", env, [
   appName         : "SimpleRestService",
 ])
 
-pipelineInitializer.runBuildPipeline(params)
+buildPipeline.run(params)
