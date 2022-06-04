@@ -2,10 +2,6 @@
 
 Map params = pipelineInitializer.setup("SPRINGBOOT", env, [
   appName         : "SimpleRestService",
-  gitRepo         : "SimpleRestService",
-  
-  projectName     : "LotteryServices",
-  cleanTempFiles  : true
 ])
 
-pipelineInitializer.runPipeline(params)
+pipelineInitializer.runBuildPipeline(params)
