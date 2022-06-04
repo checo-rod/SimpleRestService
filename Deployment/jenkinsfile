@@ -4,4 +4,4 @@ Map params = buildPipeline.setup("SPRINGBOOT", env, [
   appName         : "SimpleRestService"
 ])
 
-buildPipeline.runPipeline(params)
+buildPipeline.execute(params)
