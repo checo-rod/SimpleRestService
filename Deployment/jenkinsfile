@@ -8,6 +8,4 @@ Map params = pipelineInitializer.setup("SPRINGBOOT", env, [
   cleanTempFiles  : true
 ])
 
-params.technology.agent.build.image = "img-maven-java-11"
-  
 pipelineInitializer.runPipeline(params)
