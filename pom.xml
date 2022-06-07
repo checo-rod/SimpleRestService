@@ -115,13 +115,13 @@
 
 <distributionManagement>
     <repository>
-        <id>central</id>
+        <id>artifactory</id>
         <name>artifactory-internal-releases</name>
         <url>http://artifactory.checorod.com/artifactory/libs-release-local</url>
     </repository>
 
     <snapshotRepository>
-        <id>snapshots</id>
+        <id>artifactory-snapshots</id>
         <name>artifactory-internal-snapshot</name>
         <url>http://artifactory.checorod.com/artifactory/libs-snapshot-local</url>
     </snapshotRepository>
