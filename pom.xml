@@ -22,6 +22,7 @@
 		<version>2.5.12</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
+
 	<repositories>
 		<repository>
 			<id>artifactory-central</id>
@@ -34,6 +35,17 @@
                         <url>http://artifactory.checorod.com/artifactory/libs-snapshot</url>
 		</repository>
 	</repositories>
+
+	<distributionManagement>
+		<repository>
+			<id>artifactory</id>
+			<url>https://artifactory.bclc.com/artifactory/java-lib-local/</url>
+		</repository>
+		<snapshotRepository>
+			<id>artifactory-snapshots</id>
+			<url>https://artifactory.bclc.com/artifactory/java-lib-local/</url>
+		</snapshotRepository>
+	</distributionManagement>
 
 	<dependencyManagement>
 		<dependencies>
