@@ -157,7 +157,7 @@
                                 <timeoutSec>60</timeoutSec>
                             </artifactory>
                             <publisher>
-                                <contextUrl>http://comet.checorod.com:1341/artifactory</contextUrl>
+                                <contextUrl>http://artifactoy.checorod.com/artifactory</contextUrl>
                                 <username>${artifactory.username}</username>
                                 <password>${artifactory.password}</password>
                                 <excludePatterns>*-tests.jar</excludePatterns>
