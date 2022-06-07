@@ -23,30 +23,6 @@
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 
-	<repositories>
-		<repository>
-			<id>artifactory-central</id>
-			<name>maven-libs-release-virtual</name>
-                        <url>http://artifactory.checorod.com/artifactory/libs-release</url>
-		</repository>
-		<repository>
-			<id>snapshots</id>
-			<name>maven-libs-snapshot-virtual</name>
-                        <url>http://artifactory.checorod.com/artifactory/libs-snapshot</url>
-		</repository>
-	</repositories>
-
-	<distributionManagement>
-		<repository>
-			<id>artifactory</id>
-			<url>https://artifactory.bclc.com/artifactory/java-lib-local/</url>
-		</repository>
-		<snapshotRepository>
-			<id>artifactory-snapshots</id>
-			<url>https://artifactory.bclc.com/artifactory/java-lib-local/</url>
-		</snapshotRepository>
-	</distributionManagement>
-
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
@@ -137,6 +113,13 @@
 		</dependency>
 	</dependencies>
 
+	<pluginRepositories>
+	    <pluginRepository>
+	        <id>Maven-Artifactory-Plugin</id>
+	        <url>https://jcenter.bintray.com</url>
+	    </pluginRepository>
+	</pluginRepositories>
+
 	<build>
 		<plugins>
 			<plugin>
@@ -151,6 +134,34 @@
 					</excludes>
 				</configuration>
 			</plugin>
+        <plugin>
+            <groupId>org.jfrog.buildinfo</groupId>
+            <artifactId>artifactory-maven-plugin</artifactId>
+            <version>3.2.3</version>
+            <inherited>false</inherited>
+            <executions>
+                <execution>
+                    <id>build-info</id>
+                    <goals>
+                        <goal>publish</goal>
+                    </goals>
+                    <configuration>
+                        <deployProperties>
+                            <groupId>${project.groupId}</groupId>
+                            <artifactId>${project.artifactId}</artifactId>
+                            <version>${project.version}</version>
+                        </deployProperties>
+                        <publisher>
+                            <contextUrl>http://artifactory.checorod.com</contextUrl>
+                            <username>${artifactory.username}</username>
+                            <password>${artiractory.password}</password>
+                            <repoKey>java-local-libs</repoKey>
+                            <snapshotRepoKey>java-local-libs</snapshotRepoKey>
+                        </publisher>
+                    </configuration>
+                </execution>
+            </executions>
+        </plugin>
 		</plugins>
 	</build>
 
