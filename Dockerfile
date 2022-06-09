@@ -3,15 +3,6 @@ FROM docker-registry.checorod.com:1336/infra/img-javaruntime-11:latest
 MAINTAINER Sergio Rodriguez (srodriguez@checorod.com)
 
 # ------------------------
-# Install Java, telnet
-# ------------------------
-
-RUN yum update -y && \
-    yum install -y wget java-11-openjdk-headless which && \
-    yum install -y telnet \
-    yum clean all 
-
-# ------------------------
 # Expose Ports for app communication
 # ------------------------
 
