@@ -1,4 +1,5 @@
-FROM docker-registry.checorod.com:1336/infra/img-java-runtime-11:latest
+FROM docker-registry.checorod.com:1336/infra/img-javaruntime-11:latest
+
 MAINTAINER Sergio Rodriguez (srodriguez@checorod.com)
 
 # ------------------------
@@ -29,7 +30,7 @@ ENV packageFileNameEnv ${packageFileName}
 # ------------------------
 # Add application to image
 # ------------------------
-ADD ["/target/${packageFileName}", "/opt/${packageFileName}"]
+ADD ["./target/${packageFileName}", "/opt/${packageFileName}"]
 
 
 # ------------------------
