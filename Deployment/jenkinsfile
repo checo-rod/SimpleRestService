@@ -1,7 +1,7 @@
 @Library(["jk-pipeline-common-library", "jk-pipeline-common-pipeline"]) _ // import libraries
 
-Map params = pipeline.setup("SPRINGBOOT", env, [
+Map params = pipelineExecution.setup("SPRINGBOOT", env, [
   appName         : "SimpleRestService"
 ])
 
-pipeline.run(params)
+pipelineExecution.run(params)
