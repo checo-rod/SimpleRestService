@@ -32,8 +32,8 @@ public class Controller {
     	log.info("Start Controller.test");
     	
 
-    	log.info("Finish Controller.createOrder");
+    	log.info("Finish Controller.test");
     	
-		return new ResponseEntity<>("{\"status\":\"working\"}", HttpStatus.OK);
+		return new ResponseEntity<>("{\"status\":\"Success\"}", HttpStatus.OK);
 	}
 }
