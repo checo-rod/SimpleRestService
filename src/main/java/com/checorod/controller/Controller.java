@@ -1,5 +1,10 @@
 package com.checorod.controller;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+
+import org.apache.commons.io.IOUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -19,21 +24,22 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping(path = "/test")
 public class Controller {
 
-    @Operation(
-            summary = "Allow SAP to inform Intralot of a new Sales Orders",
-            description = "Allows SAP to notify the Intralot system when orders have left the BCLC warehouse for shipment to retailer",
-            parameters = {
-                    @Parameter(name = "X-Request-ID", in = ParameterIn.HEADER, required = false)
-            }
-    )
+	@Value("${application.message:default-message}")
+	private String mensaje;
+	
+	@Value("${application.script.dir}")
+	private String scriptsDir;
+	
 	@GetMapping(path="/", produces = MediaType.APPLICATION_JSON_VALUE )
-	public ResponseEntity<String> test() {
+	public ResponseEntity<String> test() throws IOException {
 		
-    	log.info("Start Controller.test");
     	
+        FileInputStream fis = new FileInputStream(scriptsDir + "/content.txt");
+        String data = IOUtils.toString(fis, "UTF-8");
+            
 
-    	log.info("Finish Controller.test");
-    	
-		return new ResponseEntity<>("{\"status\":\"Success\"}", HttpStatus.OK);
+        
+    			
+		return new ResponseEntity<>("{\"status\":\""+data+"\"}", HttpStatus.OK);
 	}
 }
