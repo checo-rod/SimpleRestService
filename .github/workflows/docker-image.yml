@@ -25,7 +25,7 @@ jobs:
       run: mvn clean install
 
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag checo-rod/simple-rest-service:${TIMESTAMP}
+      run: docker build . --file Dockerfile --tag checorod1/simple-rest-service:${TIMESTAMP}
 
     - name: Push the Docker image
-      run: docker push checo-rod/simple-rest-service:${TIMESTAMP}
+      run: docker push checorod1/simple-rest-service:${TIMESTAMP}
