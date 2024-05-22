@@ -9,8 +9,6 @@ steps:
 uses: docker/login-action@v1
 with:
 registry: ghcr.io
-username: ${{ github.actor }}
-password: ${{ secrets.GITHUB_TOKEN }}
 - name: Build the simple-rest-service Docker image
 run: |
        docker build . --tag ghcr.io/checo-rod/simple-rest-service-docker:latest
