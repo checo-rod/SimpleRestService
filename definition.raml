@@ -1,0 +1,5135 @@
+#%RAML 1.0
+types:
+  ReferredDocumentInformation7:
+    type: object
+    properties:
+      type?: ReferredDocumentType4
+      number_?: Max35Text
+      related_date?: ISODate
+      line_details?:
+        type: array
+        items: DocumentLineInformation1
+  Authorisation1Choice:
+    type: object
+    (amf-or):
+      -
+        type: any
+      -
+        type: any
+    properties:
+      code?: Authorisation1Code
+      proprietary?: Max128Text
+  IBAN2007Identifier:
+    type: string
+    pattern: "[A-Z]{2,2}[0-9]{2,2}[a-zA-Z0-9]{1,30}"
+  LocalInstrument2Choice:
+    type: object
+    (amf-or):
+      -
+        type: any
+      -
+        type: any
+    properties:
+      code?: ExternalLocalInstrument1Code
+      proprietary?: Max35Text
+  TaxFilingValidationResponse:
+    type: object
+    examples:
+      validate-tax-filing-valid:
+        strict: false
+        value:
+          schema_version: 1
+          tax_form_id: RC159_TT20
+          filing_date: 2020-04-09
+          contact_name: Test Name
+          contact_language: FR
+          validation_status: VALID
+          fields:
+            -
+              id: business.name
+              value: ABC Bikes
+            -
+              id: business.account.federal
+              value: 123456782RT0001
+            -
+              id: payment.amount.federal
+              value: "1234.56"
+      validate-tax-filing-invalid:
+        strict: false
+        value:
+          schema_version: 1
+          tax_form_id: RC159_TT20
+          filing_date: 2020-04-09
+          contact_name: Test Name
+          contact_language: FR
+          validation_status: INVALID
+          violations:
+            -
+              code: 5007
+              message: "Invalid filing date 2020-04-09. Only payments from the current date up to the last day of the current year are supported. (code: TAX27)"
+          fields:
+            -
+              id: business.name
+              value: ABC Bikes
+            -
+              id: business.account.federal
+              value: 123456782RT0001
+            -
+              id: payment.amount.federal
+              value: "1234.56"
+    properties:
+      schema_version:
+        type: integer
+        required: true
+      tax_form_id:
+        type: string
+        required: true
+      contact_name:
+        type: string
+        required: true
+      contact_language?:
+        enum:
+          - EN
+          - FR
+        type: string
+      validation_status: TaxFilingValidationResponseStatus
+      fields:
+        type: array
+        items: TaxFilingValidationResponseField
+        required: true
+  TaxInformation7:
+    type: object
+    properties:
+      creditor?: TaxParty1
+      debtor?: TaxParty2
+      ultimate_debtor?: TaxParty2
+      administration_zone?: Max35Text
+      reference_number?: Max140Text
+      method?: Max35Text
+      total_taxable_base_amount?: ActiveOrHistoricCurrencyAndAmount
+      total_tax_amount?: ActiveOrHistoricCurrencyAndAmount
+      date?: ISODate
+      sequence_number?: Number
+      record?:
+        type: array
+        items: TaxRecord2
+  OrganisationIdentificationSchemeName1Choice:
+    type: object
+    (amf-or):
+      -
+        type: any
+      -
+        type: any
+    properties:
+      code?: ExternalOrganisationIdentification1Code
+      proprietary?: Max35Text
+  ExternalDiscountAmountType1Code:
+    type: string
+  ISODateTime:
+    type: datetime
+  ExternalDocumentLineType1Code:
+    type: string
+  AmendmentInformationDetails13:
+    type: object
+    properties:
+      original_mandate_identification?: Max35Text
+      original_creditor_scheme_identification?: PartyIdentification135
+      original_creditor_agent?: BranchAndFinancialInstitutionIdentification6
+      original_creditor_agent_account?: CashAccount38
+      original_debtor?: PartyIdentification135
+      original_debtor_account?: CashAccount38
+      original_debtor_agent?: BranchAndFinancialInstitutionIdentification6
+      original_debtor_agent_account?: CashAccount38
+      original_final_collection_date?: ISODate
+      original_frequency?: Frequency36Choice
+      original_reason?: MandateSetupReason1Choice
+      original_tracking_days?: Exact2NumericText
+  TaxFilingSubmissionRequest:
+    type: object
+    examples:
+      submit-tax-filing:
+        strict: false
+        value:
+          schema_version: 1
+          tax_form_id: RC159_TT20
+          member_number: "99999999999999"
+          trace_number: 654321
+          filing_date: 2021-02-01
+          contact_name: test
+          contact_language: EN
+          fields:
+            -
+              id: business.name
+              value: ABC Bikes
+            -
+              id: business.account.federal
+              value: 213456789RT0001
+            -
+              id: payment.amount.federal
+              value: "1234.56"
+    properties:
+      schema_version:
+        type: integer
+        required: true
+      tax_form_id:
+        type: string
+        required: true
+      filing_date:
+        type: date-only
+        required: true
+      member_number:
+        type: string
+        required: true
+      trace_number?:
+        type: number
+      contact_name:
+        type: string
+        minLength: 1
+        maxLength: 35
+        required: true
+      contact_language?:
+        enum:
+          - EN
+          - FR
+        type: string
+      fields:
+        type: array
+        items: TaxFilingSubmissionRequestField
+        required: true
+  Frequency6Code:
+    enum:
+      - YEAR
+      - MNTH
+      - QURT
+      - MIAN
+      - WEEK
+      - DAIL
+      - ADHO
+      - INDA
+      - FRTN
+    type: string
+  SupplementaryData1:
+    type: object
+    properties:
+      place_and_name?: Max350Text
+      envelope: SupplementaryDataEnvelope1
+  ExternalPurpose1Code:
+    type: string
+  PaymentMethod4Code:
+    enum:
+      - CHK
+      - TRF
+      - DD
+      - TRA
+    type: string
+  LEIIdentifier:
+    type: string
+    pattern: "[A-Z0-9]{18,18}[0-9]{2,2}"
+  ExternalStatusReason1Code:
+    type: string
+  OriginalTransactionReference31:
+    type: object
+    properties:
+      interbank_settlement_amount?: ActiveOrHistoricCurrencyAndAmount
+      amount?: AmountType4Choice
+      interbank_settlement_date?: ISODate
+      requested_collection_date?: ISODate
+      requested_execution_date?: DateAndDateTime2Choice
+      creditor_scheme_identification?: PartyIdentification135
+      settlement_information?: SettlementInstruction7
+      payment_type_information?: PaymentTypeInformation27
+      payment_method?: PaymentMethod4Code
+      mandate_related_information?: MandateRelatedData1Choice
+      remittance_information?: RemittanceInformation16
+      ultimate_debtor?: Party40Choice
+      debtor?: Party40Choice
+      debtor_account?: CashAccount38
+      debtor_agent?: BranchAndFinancialInstitutionIdentification6
+      debtor_agent_account?: CashAccount38
+      creditor_agent?: BranchAndFinancialInstitutionIdentification6
+      creditor_agent_account?: CashAccount38
+      creditor?: Party40Choice
+      creditor_account?: CashAccount38
+      ultimate_creditor?: Party40Choice
+      purpose?: Purpose2Choice
+  Frequency36Choice:
+    type: object
+    (amf-or):
+      -
+        type: any
+      -
+        type: any
+      -
+        type: any
+    properties:
+      type?: Frequency6Code
+      period?: FrequencyPeriod1
+      point_in_time?: FrequencyAndMoment1
+  Max35Text:
+    description: Specifies a character string with a maximum length of 35 characters.
+    type: string
+    minLength: 1
+    maxLength: 35
+  MandateSetupReason1Choice:
+    type: object
+    (amf-or):
+      -
+        type: any
+      -
+        type: any
+    properties:
+      code?: ExternalMandateSetupReason1Code
+      proprietary?: Max70Text
+  ProxyAccountIdentification1:
+    type: object
+    properties:
+      type?: ProxyAccountType1Choice
+      identification: Max2048Text
+  FrequencyPeriod1:
+    type: object
+    properties:
+      type: Frequency6Code
+      count_per_period: DecimalNumber
+  RemittanceLocationData1:
+    type: object
+    properties:
+      method: RemittanceLocationMethod2Code
+      electronic_address?: Max2048Text
+      postal_address?: NameAndAddress16
+  PartyIdentification135:
+    type: object
+    properties:
+      name?: Max140Text
+      postal_address?: PostalAddress24
+      identification?: Party38Choice
+      country_of_residence?: CountryCode
+      contact_details?: Contact4
+  ChargeBearerType1Code:
+    enum:
+      - DEBT
+      - CRED
+      - SHAR
+      - SLEV
+    type: string
+  ExternalCreditorAgentInstruction1Code:
+    type: string
+  ExternalPaymentGroupStatus1Code:
+    type: string
+  StatusReason6Choice:
+    type: object
+    (amf-or):
+      -
+        type: any
+      -
+        type: any
+    properties:
+      code?: ExternalStatusReason1Code
+      proprietary?: Max35Text
+  Max15NumericText:
+    description: Specifies a numeric string with a maximum length of 15 digits.
+    type: string
+    pattern: "[0-9]{1,15}"
+  CountryCode:
+    type: string
+    pattern: "[A-Z]{2,2}"
+  RegulatoryReporting3:
+    type: object
+    properties:
+      debit_credit_reporting_indicator?: RegulatoryReportingType1Code
+      authority?: RegulatoryAuthority2
+      details?:
+        type: array
+        items: StructuredRegulatoryReporting3
+  MandateClassification1Code:
+    enum:
+      - FIXE
+      - VARI
+      - USGB
+    type: string
+  OrganisationIdentification29:
+    type: object
+    properties:
+      any_bic?: AnyBICDec2014Identifier
+      lei?: LEIIdentifier
+      other?:
+        type: array
+        items: GenericOrganisationIdentification1
+  TaxInformation8:
+    type: object
+    properties:
+      creditor?: TaxParty1
+      debtor?: TaxParty2
+      administration_zone?: Max35Text
+      reference_number?: Max140Text
+      method?: Max35Text
+      total_taxable_base_amount?: ActiveOrHistoricCurrencyAndAmount
+      total_tax_amount?: ActiveOrHistoricCurrencyAndAmount
+      date?: ISODate
+      sequence_number?: Number
+      record?:
+        type: array
+        items: TaxRecord2
+  TaxFormSchemaFieldType:
+    enum:
+      - STRING
+      - INTEGER
+      - BOOLEAN
+      - MONEY
+      - DATE
+      - PHONE
+    type: string
+  FrequencyAndMoment1:
+    type: object
+    properties:
+      type: Frequency6Code
+      point_in_time: Exact2NumericText
+  GenericAccountIdentification1:
+    type: object
+    properties:
+      identification: Max34Text
+      scheme_name?: AccountSchemeName1Choice
+      issuer?: Max35Text
+  FinancialInstitutionIdentification18:
+    type: object
+    properties:
+      bicfi?: BICFIDec2014Identifier
+      clearing_system_member_identification?: ClearingSystemMemberIdentification2
+      lei?: LEIIdentifier
+      name?: Max140Text
+      postal_address?: PostalAddress24
+      other?: GenericFinancialIdentification1
+  Max2048Text:
+    description: Specifies a character string with a maximum length of 2048 characters.
+    type: string
+    minLength: 1
+    maxLength: 2048
+  TrueFalseIndicator:
+    type: boolean
+  SettlementDateTimeIndication1:
+    type: object
+    properties:
+      debit_date_time?: ISODateTime
+      credit_date_time?: ISODateTime
+  NameAndAddress16:
+    type: object
+    properties:
+      name: Max140Text
+      address: PostalAddress24
+  MandateRelatedInformation14:
+    type: object
+    properties:
+      mandate_identification?: Max35Text
+      date_of_signature?: ISODate
+      amendment_indicator?: TrueFalseIndicator
+      amendment_information_details?: AmendmentInformationDetails13
+      electronic_signature?: Max1025Text
+      first_collection_date?: ISODate
+      final_collection_date?: ISODate
+      frequency?: Frequency36Choice
+      reason?: MandateSetupReason1Choice
+      tracking_days?: Exact2NumericText
+  Max10KBinary:
+    type: string
+    minLength: 1
+    maxLength: 10240
+  TaxFilingHistoryPage:
+    (amf-and):
+      - Page
+      -
+        type: object
+        properties:
+          content:
+            type: array
+            items: TaxFilingHistory
+            required: true
+    examples:
+      list-tax-filings-history:
+        strict: false
+        value:
+          page_size_limit: 50
+          page_total_records: 2
+          has_more_items: false
+          content:
+            -
+              tax_filing_id: 8c0892fa650411eb93ad73ec17adfbe0
+              tax_form:
+                template_id: 1
+                tax_form_id: RC159_TT20
+                vendor_number: 11324
+                description: GST/HST - Arrears
+                form_number: RC159
+                tax_code: TT20
+                tax_group: FEDERAL
+                cra_category_id: RT
+                payment_type_id: AMOUNT_OWING
+                tax_type_id: GST_HST
+                jurisdiction: CRA
+                filing_only: false
+              tax_filing:
+                schema_version: 1
+                filing_date: 2021-02-01
+                origin: API
+                business_account: 123456789RT0001
+                member_number: "999999999999999"
+                trace_number: 654321
+                amount_paid: "1234.56"
+                contact_name: Test Name
+                contact_language: EN
+                fields:
+                  -
+                    id: business.name
+                    value: ABC Bikes
+                    type: STRING
+                  -
+                    id: business.account.federal
+                    value: 123456789RT0001
+                    type: STRING
+                  -
+                    id: payment.amount.federal
+                    value: "1234.56"
+                    type: MONEY
+    type: any
+  DocumentLineInformation1:
+    type: object
+    properties:
+      identification:
+        type: array
+        items: DocumentLineIdentification1
+        minItems: 1
+        required: true
+      description?: Max2048Text
+      amount?: RemittanceAmount3
+  Priority2Code:
+    enum:
+      - HIGH
+      - NORM
+    type: string
+  SequenceType3Code:
+    enum:
+      - FRST
+      - RCUR
+      - FNAL
+      - OOFF
+      - RPRE
+    type: string
+  TaxParty2:
+    type: object
+    properties:
+      tax_identification?: Max35Text
+      registration_identification?: Max35Text
+      tax_type?: Max35Text
+      authorisation?: TaxAuthorisation1
+  PendingPaymentDto:
+    type: object
+    properties:
+      transaction_date: ISODateTime
+      transaction_amount:
+        type: number
+        (amf-exclusiveMinimum): true
+        minimum: 0
+        required: true
+      trace_number:
+        type: integer
+        required: true
+      vendor_number:
+        type: integer
+        required: true
+      biller_account:
+        type: string
+        maxLength: 30
+        required: true
+  TaxForm:
+    description: The model of tax form.
+    type: object
+    properties:
+      template_id?:
+        description: Template id for tax form
+        type: integer
+      tax_form_id:
+        description: The unique identifier of tax form.
+        type: string
+        required: true
+      vendor_number:
+        description: The identifier of tax form in Bill Payment System.
+        type: integer
+        required: true
+      description:
+        description: The form description.
+        type: string
+        required: true
+      form_number?:
+        description: The form number defined by CRA.
+        type: string
+      tax_code?:
+        description: The tax code.
+        type: string
+      tax_group: TaxFormGroup
+      cra_category_id?: CraTaxCategoryId
+      payment_type_id?: TaxPaymentTypeId
+      tax_type_id?: TaxTypeId
+      jurisdiction?:
+        description: The jurisdiction of a form. E.g. CRA (for federal forms), AB (for Alberta forms).
+        enum:
+          - CRA
+          - AB
+          - BC
+          - MB
+          - NB
+          - NL
+          - NT
+          - NS
+          - NU
+          - ON
+          - PE
+          - QC
+          - SK
+          - YT
+        type: string
+      filing_only?:
+        type: boolean
+  ReferredDocumentType4:
+    type: object
+    properties:
+      code_or_proprietary: ReferredDocumentType3Choice
+      issuer?: Max35Text
+  TaxRecordDetails2:
+    type: object
+    properties:
+      period?: TaxPeriod2
+      amount: ActiveOrHistoricCurrencyAndAmount
+  SupplementaryDataEnvelope1:
+    type: object
+  PersonIdentificationSchemeName1Choice:
+    type: object
+    (amf-or):
+      -
+        type: any
+      -
+        type: any
+    properties:
+      code?: ExternalPersonIdentification1Code
+      proprietary?: Max35Text
+  Max105Text:
+    description: Specifies a character string with a maximum length of 105 characters.
+    type: string
+    minLength: 1
+    maxLength: 105
+  TaxType:
+    type: object
+    properties:
+      id: TaxTypeId
+      name:
+        type: string
+        required: true
+  PaymentReversalReason9:
+    type: object
+    properties:
+      originator?: PartyIdentification135
+      reason?: ReversalReason4Choice
+      additional_information?:
+        type: array
+        items: Max105Text
+  Max1025Text:
+    description: Specifies a character string with a maximum length of 1025 characters.
+    type: string
+    minLength: 1
+    maxLength: 1025
+  ActiveCurrencyCode:
+    type: string
+    pattern: "[A-Z]{3,3}"
+  Number:
+    type: number
+  GroupHeader93:
+    type: object
+    properties:
+      message_identification: Max35Text
+      creation_date_time: ISODateTime
+      batch_booking?: BatchBookingIndicator
+      number_of_transactions: Max15NumericText
+      control_sum?: DecimalNumber
+      total_interbank_settlement_amount?: ActiveCurrencyAndAmount
+      interbank_settlement_date?: ISODate
+      settlement_information: SettlementInstruction7
+      payment_type_information?: PaymentTypeInformation28
+      instructing_agent?: BranchAndFinancialInstitutionIdentification6
+      instructed_agent?: BranchAndFinancialInstitutionIdentification6
+  RegulatoryAuthority2:
+    type: object
+    properties:
+      name?: Max140Text
+      country?: CountryCode
+  ActiveOrHistoricCurrencyCode:
+    type: string
+    pattern: "[A-Z]{3,3}"
+  DateAndPlaceOfBirth1:
+    type: object
+    properties:
+      birth_date: ISODate
+      province_of_birth?: Max35Text
+      city_of_birth: Max35Text
+      country_of_birth: CountryCode
+  EquivalentAmount2:
+    type: object
+    properties:
+      amount: ActiveOrHistoricCurrencyAndAmount
+      currency_of_transfer: ActiveOrHistoricCurrencyCode
+  TaxAuthorisation1:
+    type: object
+    properties:
+      title?: Max35Text
+      name?: Max140Text
+  TaxFilingValidationRequestField:
+    type: object
+    properties:
+      id:
+        type: string
+        required: true
+      value:
+        type: string
+        required: true
+  ExternalServiceLevel1Code:
+    type: string
+  DocumentLineIdentification1:
+    type: object
+    properties:
+      type?: DocumentLineType1
+      number_?: Max35Text
+      related_date?: ISODate
+  CategoryPurpose1Choice:
+    type: object
+    (amf-or):
+      -
+        type: any
+      -
+        type: any
+    properties:
+      code?: ExternalCategoryPurpose1Code
+      proprietary?: Max35Text
+  UUIDv4Identifier:
+    type: string
+    pattern: "[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}"
+  RemittanceLocationMethod2Code:
+    enum:
+      - FAXI
+      - EDIC
+      - URID
+      - EMAL
+      - POST
+      - SMSM
+    type: string
+  BatchBookingIndicator:
+    type: boolean
+  CreditDebitCode:
+    enum:
+      - DBIT
+      - CRDT
+    type: string
+  ComplexErrorResponse:
+    (amf-and):
+      -
+        (amf-and):
+          -
+            type: object
+            properties:
+              message:
+                description: The user friendly message explaining the error
+                example:
+                  strict: false
+                  value: Unexpected error
+                type: string
+                required: true
+          -
+            type: object
+            properties:
+              http_status_code:
+                description: The HTTP Status code
+                example:
+                  strict: false
+                  value: 400
+                type: integer
+                minimum: 100
+                maximum: 600
+                required: true
+              response_code:
+                description: The application response code to identify the error
+                example:
+                  strict: false
+                  value: 21026
+                type: integer
+                required: true
+        type: any
+      -
+        type: object
+        properties:
+          violations?:
+            type: array
+            items:
+              type: object
+              properties:
+                code:
+                  description: The application response code to identify the error
+                  example:
+                    strict: false
+                    value: 41026
+                  type: integer
+                  required: true
+                message:
+                  description: The user friendly message explaining the error
+                  example:
+                    strict: false
+                    value: "body.group_header: Field message_identification is required."
+                  type: string
+                  required: true
+                source?:
+                  description: The identifier of invalid data element
+                  example:
+                    strict: false
+                    value: body.group_header
+                  type: string
+    type: any
+  TaxAmountAndType1:
+    type: object
+    properties:
+      type?: TaxAmountType1Choice
+      amount: ActiveOrHistoricCurrencyAndAmount
+  Max70Text:
+    description: Specifies a character string with a maximum length of 70characters.
+    type: string
+    minLength: 1
+    maxLength: 70
+  ProxyAccountType1Choice:
+    type: object
+    (amf-or):
+      -
+        type: any
+      -
+        type: any
+    properties:
+      code?: ExternalProxyAccountType1Code
+      proprietary?: Max35Text
+  CreditTransferTransaction43:
+    type: object
+    properties:
+      payment_identification: PaymentIdentification13
+      payment_type_information?: PaymentTypeInformation28
+      interbank_settlement_amount: ActiveCurrencyAndAmount
+      interbank_settlement_date?: ISODate
+      settlement_priority?: Priority3Code
+      settlement_time_indication?: SettlementDateTimeIndication1
+      settlement_time_request?: SettlementTimeRequest2
+      acceptance_date_time?: ISODateTime
+      pooling_adjustment_date?: ISODate
+      instructed_amount?: ActiveOrHistoricCurrencyAndAmount
+      exchange_rate?: BaseOneRate
+      charge_bearer: ChargeBearerType1Code
+      charges_information?:
+        type: array
+        items: Charges7
+      mandate_related_information?: CreditTransferMandateData1
+      previous_instructing_agent_1?: BranchAndFinancialInstitutionIdentification6
+      previous_instructing_agent_1_account?: CashAccount38
+      previous_instructing_agent_2?: BranchAndFinancialInstitutionIdentification6
+      previous_instructing_agent_2_account?: CashAccount38
+      previous_instructing_agent_3?: BranchAndFinancialInstitutionIdentification6
+      previous_instructing_agent_3_account?: CashAccount38
+      instructing_agent?: BranchAndFinancialInstitutionIdentification6
+      instructed_agent?: BranchAndFinancialInstitutionIdentification6
+      intermediary_agent_1?: BranchAndFinancialInstitutionIdentification6
+      intermediary_agent_1_account?: CashAccount38
+      intermediary_agent_2?: BranchAndFinancialInstitutionIdentification6
+      intermediary_agent_2_account?: CashAccount38
+      intermediary_agent_3?: BranchAndFinancialInstitutionIdentification6
+      intermediary_agent_3_account?: CashAccount38
+      ultimate_debtor?: PartyIdentification135
+      initiating_party?: PartyIdentification135
+      debtor: PartyIdentification135
+      debtor_account?: CashAccount38
+      debtor_agent: BranchAndFinancialInstitutionIdentification6
+      debtor_agent_account?: CashAccount38
+      creditor_agent: BranchAndFinancialInstitutionIdentification6
+      creditor_agent_account?: CashAccount38
+      creditor: PartyIdentification135
+      creditor_account?: CashAccount38
+      ultimate_creditor?: PartyIdentification135
+      instruction_for_creditor_agent?:
+        type: array
+        items: InstructionForCreditorAgent3
+      instruction_for_next_agent?:
+        type: array
+        items: InstructionForNextAgent1
+      purpose?: Purpose2Choice
+      regulatory_reporting?:
+        type: array
+        items: RegulatoryReporting3
+        maxItems: 10
+      tax?: TaxInformation8
+      related_remittance_information?:
+        type: array
+        items: RemittanceLocation7
+        maxItems: 10
+      remittance_information?: RemittanceInformation16
+      supplementary_data?:
+        type: array
+        items: SupplementaryData1
+  Party38Choice:
+    type: object
+    (amf-or):
+      -
+        type: any
+      -
+        type: any
+    properties:
+      organisation_identification?: OrganisationIdentification29
+      private_identification?: PersonIdentification13
+  TaxFilingHistoryField:
+    type: object
+    properties:
+      id:
+        type: string
+        required: true
+      value:
+        type: string
+        required: true
+      type: TaxFormSchemaFieldType
+  AnyBICDec2014Identifier:
+    type: string
+    pattern: "[A-Z0-9]{4,4}[A-Z]{2,2}[A-Z0-9]{2,2}([A-Z0-9]{3,3}){0,1}"
+  CraTaxCategory:
+    type: object
+    properties:
+      id: CraTaxCategoryId
+      name:
+        description: The description of category.
+        example:
+          strict: false
+          value: Corporate Income Tax
+        type: string
+        required: true
+  RemittanceAmount3:
+    type: object
+    properties:
+      due_payable_amount?: ActiveOrHistoricCurrencyAndAmount
+      discount_applied_amount?:
+        type: array
+        items: DiscountAmountAndType1
+      credit_note_amount?: ActiveOrHistoricCurrencyAndAmount
+      tax_amount?:
+        type: array
+        items: TaxAmountAndType1
+      adjustment_amount_and_reason?:
+        type: array
+        items: DocumentAdjustment1
+      remitted_amount?: ActiveOrHistoricCurrencyAndAmount
+  SimpleErrorResponse:
+    (amf-and):
+      -
+        type: object
+        properties:
+          message:
+            description: The user friendly message explaining the error
+            example:
+              strict: false
+              value: Unexpected error
+            type: string
+            required: true
+      -
+        type: object
+        properties:
+          http_status_code:
+            description: The HTTP Status code
+            example:
+              strict: false
+              value: 400
+            type: integer
+            minimum: 100
+            maximum: 600
+            required: true
+          response_code:
+            description: The application response code to identify the error
+            example:
+              strict: false
+              value: 21026
+            type: integer
+            required: true
+    type: any
+  ExternalPaymentTransactionStatus1Code:
+    type: string
+  FIToFICustomerCreditTransferV09:
+    type: object
+    examples:
+      make-bill-payment:
+        strict: false
+        value:
+          group_header:
+            message_identification: b4b5a15b07c84665b904ed7e486dc32c
+            creation_date_time: 2020-09-10T00:36:31.244+00:00
+            number_of_transactions: "1"
+            control_sum: 1.23
+            settlement_information:
+              settlement_method: INDA
+          credit_transfer_transaction_information:
+            -
+              payment_identification:
+                end_to_end_identification: "123456"
+                transaction_identification: 5b4ddd1d1f7c439b920e4b94103665f1
+              interbank_settlement_amount:
+                amount: 1.23
+                currency: CAD
+              interbank_settlement_date: 2020-09-10
+              charge_bearer: SLEV
+              payment_type_information:
+                category_purpose:
+                  proprietary: BILL
+              debtor:
+                identification:
+                  organisation_identification:
+                    other:
+                      -
+                        identification: "10001001"
+                contact_details:
+                  name: John Doe
+              debtor_agent:
+                financial_institution_identification:
+                  clearing_system_member_identification:
+                    member_identification: "080912345"
+              creditor:
+                identification:
+                  organisation_identification:
+                    other:
+                      -
+                        identification: "10001"
+              creditor_agent:
+                financial_institution_identification:
+                  clearing_system_member_identification:
+                    member_identification: "080912010"
+              creditor_account:
+                identification:
+                  other:
+                    identification: 10001-111
+    properties:
+      group_header: GroupHeader93
+      credit_transfer_transaction_information:
+        type: array
+        items: CreditTransferTransaction43
+        minItems: 1
+        required: true
+      supplementary_data?:
+        type: array
+        items: SupplementaryData1
+  ExternalCategoryPurpose1Code:
+    type: string
+  PhoneNumber:
+    description: |-
+      The collection of information which identifies a specific phone or FAX number as defined by telecom services.
+      It consists of a "+" followed by the country code (from 1 to 3 characters) then a "-" and finally, any combination of numbers, "(", ")", "+" and "-" (up to 30 characters).
+    type: string
+    pattern: \+[0-9]{1,3}-[0-9()+\-]{1,30}
+  HealthCheckResponse:
+    description: Health Check Response
+    properties:
+      status?: HealthStatus
+      details?:
+        description: List of HealthCheckComponent objects
+        type: array
+        items: HealthCheckComponent
+  TaxFormGroup:
+    enum:
+      - FEDERAL
+      - PROVINCIAL
+    type: string
+  TaxFilingSubmissionRequestField:
+    type: object
+    properties:
+      id:
+        type: string
+        required: true
+      value:
+        type: string
+        required: true
+  GenericIdentification30:
+    type: object
+    properties:
+      identification: Exact4AlphaNumericText
+      issuer: Max35Text
+      scheme_name?: Max35Text
+  ExternalLocalInstrument1Code:
+    type: string
+  ISODate:
+    type: date-only
+  Party40Choice:
+    type: object
+    (amf-or):
+      -
+        type: any
+      -
+        type: any
+    properties:
+      party?: PartyIdentification135
+      agent?: BranchAndFinancialInstitutionIdentification6
+  CraTaxCategoryId:
+    enum:
+      - RP
+      - RT
+      - RC
+      - RM
+      - RZ
+      - RD
+      - RE
+      - RN
+      - RR
+      - SL
+      - RG
+      - NR
+      - NW
+    type: string
+  ViolationResponse:
+    type: object
+    properties:
+      code:
+        description: The application response code to identify the error
+        example:
+          strict: false
+          value: 41026
+        type: integer
+        required: true
+      message:
+        description: The user friendly message explaining the error
+        example:
+          strict: false
+          value: "body.group_header: Field message_identification is required."
+        type: string
+        required: true
+      source?:
+        description: The identifier of invalid data element
+        example:
+          strict: false
+          value: body.group_header
+        type: string
+  ExternalGarnishmentType1Code:
+    type: string
+  TaxPeriod2:
+    type: object
+    properties:
+      year?: ISODate
+      type?: TaxRecordPeriod1Code
+      from_to_date?: DatePeriod2
+  InstructionForCreditorAgent3:
+    type: object
+    properties:
+      code?: ExternalCreditorAgentInstruction1Code
+      instruction_information?: Max140Text
+  RemittanceLocation7:
+    type: object
+    properties:
+      remittance_identification?: Max35Text
+      remittance_location_details?:
+        type: array
+        items: RemittanceLocationData1
+  Max16Text:
+    description: Specifies a character string with a maximum length of 16 characters.
+    type: string
+    minLength: 1
+    maxLength: 16
+  HealthCheckComponent:
+    properties:
+      name?:
+        description: Name of component
+        type: string
+      status?: HealthStatus
+      more_info?:
+        type: object
+        (amf-additionalProperties):
+          type: object
+  GenericFinancialIdentification1:
+    type: object
+    properties:
+      identification: Max35Text
+      scheme_name?: FinancialIdentificationSchemeName1Choice
+      issuer?: Max35Text
+  ExternalFinancialInstitutionIdentification1Code:
+    type: string
+  AddressType2Code:
+    enum:
+      - HOME
+      - BIZZ
+      - ADDR
+      - PBOX
+      - MLTO
+      - DLVY
+    type: string
+  GenericPersonIdentification1:
+    type: object
+    properties:
+      identification: Max35Text
+      scheme_name?: PersonIdentificationSchemeName1Choice
+      issuer?: Max35Text
+  DocumentLineType1Choice:
+    type: object
+    (amf-or):
+      -
+        type: any
+      -
+        type: any
+    properties:
+      code?: ExternalDocumentLineType1Code
+      proprietary?: Max35Text
+  PostalAddress24:
+    type: object
+    properties:
+      address_type?: AddressType3Choice
+      department?: Max70Text
+      sub_department?: Max70Text
+      street_name?: Max70Text
+      building_number?: Max16Text
+      building_name?: Max35Text
+      floor?: Max70Text
+      post_box?: Max16Text
+      room?: Max70Text
+      post_code?: Max16Text
+      town_name?: Max35Text
+      town_location_name?: Max35Text
+      district_name?: Max35Text
+      country_sub_division?: Max35Text
+      country?: CountryCode
+      address_line?:
+        type: array
+        items: Max70Text
+        maxItems: 7
+  PaymentTransaction123:
+    type: object
+    properties:
+      status_identification?: Max35Text
+      original_group_information?: OriginalGroupInformation29
+      original_instruction_identification?: Max35Text
+      original_end_to_end_identification?: Max35Text
+      original_transaction_identification?: Max35Text
+      original_uetr?: UUIDv4Identifier
+      transaction_status?: ExternalPaymentTransactionStatus1Code
+      status_reason_information?:
+        type: array
+        items: StatusReasonInformation12
+      charges_information?:
+        type: array
+        items: Charges7
+      acceptance_date_time?: ISODateTime
+      effective_interbank_settlement_date?: DateAndDateTime2Choice
+      account_servicer_reference?: Max35Text
+      clearing_system_reference?: Max35Text
+      instructing_agent?: BranchAndFinancialInstitutionIdentification6
+      instructed_agent?: BranchAndFinancialInstitutionIdentification6
+      original_transaction_reference?: OriginalTransactionReference31
+      supplementary_data?:
+        type: array
+        items: SupplementaryData1
+  Max4Text:
+    description: Specifies a character string with a maximum length of 4 characters.
+    type: string
+    minLength: 1
+    maxLength: 4
+  StructuredRegulatoryReporting3:
+    type: object
+    properties:
+      type?: Max35Text
+      date?: ISODate
+      country?: CountryCode
+      code?: Max10Text
+      amount?: ActiveOrHistoricCurrencyAndAmount
+      information?:
+        type: array
+        items: Max35Text
+  Max350Text:
+    description: Specifies a character string with a maximum length of 350 characters.
+    type: string
+    minLength: 1
+    maxLength: 350
+  TaxPaymentTypeId:
+    enum:
+      - REGULAR
+      - AMOUNT_OWING
+      - INTERIM_INSTALLMENT
+      - PAYMENT_ON_FILING
+      - BALANCE_DUE
+      - CURRENT_YEAR
+      - FILING_AND_REMITTANCE
+      - BLANK
+    type: string
+  GroupHeader91:
+    type: object
+    properties:
+      message_identification: Max35Text
+      creation_date_time: ISODateTime
+      instructing_agent?: BranchAndFinancialInstitutionIdentification6
+      instructed_agent?: BranchAndFinancialInstitutionIdentification6
+  Page:
+    type: object
+    properties:
+      page_size_limit?:
+        type: integer
+      page_total_records?:
+        type: integer
+      page_next_offset?:
+        description: Not present for the last page.
+        type: integer
+      has_more_items?:
+        description: Indicates that there are more items available.
+        type: boolean
+  CreditorReferenceType1Choice:
+    type: object
+    (amf-or):
+      -
+        type: any
+      -
+        type: any
+    properties:
+      code?: DocumentType3Code
+      proprietary?: Max35Text
+  TaxFormSchema:
+    description: The model for tax form schema - definition of form fields.
+    type: object
+    examples:
+      get-tax-form-schema:
+        strict: false
+        value:
+          schema_version: 1
+          template_id: 1
+          tax_form:
+            tax_form_id: RC159_TT20
+            vendor_number: 12440
+            description: GST/HST - Arrears
+            form_number: RC159
+            tax_code: TT20
+            tax_group: FEDERAL
+            cra_category_id: RT
+            payment_type_id: AMOUNT_OWING
+            tax_type_id: GST_HST
+            jurisdiction: CRA
+            filing_only: false
+          fields:
+            -
+              id: business.name
+              type: STRING
+              field_label: Business Name
+              field_order: 2
+              pattern: .{1,25}
+              iso_mapping: credit_transfer_transaction_information.debtor.name
+              placeholder: Provide the name of your business.
+            -
+              id: business.account.federal
+              type: STRING
+              field_label: Business Number
+              field_order: 3
+              pattern: .+
+              iso_mapping: credit_transfer_transaction_information.creditor_account.identification.other.identification
+              placeholder: Provide the account number of your business.
+            -
+              id: payment.amount.federal
+              type: MONEY
+              field_label: Amount paid
+              field_order: 4
+              pattern: ^$?([1-9]{1}[0-9]{0,2}(\,\d{3})*(\.\d{0,2})?|[1-9]{1}\d{0,}(\.\d{0,2})?|(\.\d{1,2}))$|^$?([1-9]{1}\d{0,2}(\,\d{3})*(\.\d{0,2})?|[1-9]{1}\d{0,}(\.\d{0,2})?|(\.\d{1,2}))$|^\($?([1-9]{1}\d{0,2}(\,\d{3})*(\.\d{0,2})?|[1-9]{1}\d{0,}(\.\d{0,2})?|(\.\d{1,2}))\)$
+              iso_mapping: credit_transfer_transaction_information.interbank_settlement_amount.amount
+    properties:
+      schema_version?:
+        description: The version of tax form schema.
+        type: integer
+      template_id?:
+        description: Template id for tax form schema
+        type: integer
+      tax_form: TaxForm
+      fields:
+        description: The list of form fields.
+        type: array
+        items: TaxFormSchemaField
+        required: true
+  ExternalMandateSetupReason1Code:
+    type: string
+  SettlementTimeRequest2:
+    type: object
+    properties:
+      cls_time?: ISOTime
+      till_time?: ISOTime
+      from_time?: ISOTime
+      reject_time?: ISOTime
+  ExternalOrganisationIdentification1Code:
+    type: string
+  HealthStatus:
+    description: Health check status of the component
+    enum:
+      - UP
+      - DOWN
+    type: string
+  FIToFIPaymentReversalV10:
+    type: object
+    examples:
+      reverse-bill-payment:
+        strict: false
+        value:
+          group_header:
+            message_identification: 0f18a34f36724d89b8cb0d59bb47321f
+            creation_date_time: 2020-09-10T21:53:13.259+00:00
+            number_of_transactions: "1"
+            control_sum: 7.01
+            settlement_information:
+              settlement_method: INDA
+          transaction_information:
+            -
+              reversal_identification: 2cb4d7b03e8b4a09b52964d7fae6df13
+              original_end_to_end_identification: "123456"
+              reversed_interbank_settlement_amount:
+                amount: 7.01
+                currency: CAD
+              interbank_settlement_date: 2020-09-10
+              original_transaction_reference:
+                debtor:
+                  party:
+                    identification:
+                      organisation_identification:
+                        other:
+                          -
+                            identification: "10001001"
+    properties:
+      group_header: GroupHeader89
+      original_group_information?: OriginalGroupHeader16
+      transaction_information?:
+        type: array
+        items: PaymentTransaction119
+      supplementary_data?:
+        type: array
+        items: SupplementaryData1
+  AccountIdentification4Choice:
+    type: object
+    (amf-or):
+      -
+        type: any
+      -
+        type: any
+    properties:
+      iban?: IBAN2007Identifier
+      other?: GenericAccountIdentification1
+  GarnishmentType1Choice:
+    type: object
+    (amf-or):
+      -
+        type: any
+      -
+        type: any
+    properties:
+      code?: ExternalGarnishmentType1Code
+      proprietary?: Max35Text
+  ClearingSystemIdentification2Choice:
+    type: object
+    (amf-or):
+      -
+        type: any
+      -
+        type: any
+    properties:
+      code?: ExternalClearingSystemIdentification1Code
+      proprietary?: Max35Text
+  ExternalProxyAccountType1Code:
+    type: string
+  DatePeriod2:
+    type: object
+    properties:
+      from_date: ISODate
+      to_date: ISODate
+  CreditorReferenceInformation2:
+    type: object
+    properties:
+      type?: CreditorReferenceType2
+      reference?: Max35Text
+  PaymentTypeInformation27:
+    type: object
+    properties:
+      instruction_priority?: Priority2Code
+      clearing_channel?: ClearingChannel2Code
+      service_level?:
+        type: array
+        items: ServiceLevel8Choice
+      local_instrument?: LocalInstrument2Choice
+      sequence_type?: SequenceType3Code
+      category_purpose?: CategoryPurpose1Choice
+  StructuredRemittanceInformation16:
+    type: object
+    properties:
+      referred_document_information?:
+        type: array
+        items: ReferredDocumentInformation7
+      referred_document_amount?: RemittanceAmount2
+      creditor_reference_information?: CreditorReferenceInformation2
+      invoicer?: PartyIdentification135
+      invoicee?: PartyIdentification135
+      tax_remittance?: TaxInformation7
+      garnishment_remittance?: Garnishment3
+      additional_remittance_information?:
+        type: array
+        items: Max140Text
+        maxItems: 3
+  ReferredDocumentType3Choice:
+    type: object
+    (amf-or):
+      -
+        type: any
+      -
+        type: any
+    properties:
+      code?: DocumentType6Code
+      proprietary?: Max35Text
+  GarnishmentType1:
+    type: object
+    properties:
+      code_or_proprietary: GarnishmentType1Choice
+      issuer?: Max35Text
+  TaxAmount2:
+    type: object
+    properties:
+      rate?: PercentageRate
+      taxable_base_amount?: ActiveOrHistoricCurrencyAndAmount
+      total_amount?: ActiveOrHistoricCurrencyAndAmount
+      details?:
+        type: array
+        items: TaxRecordDetails2
+  TaxFilingSubmissionResponseField:
+    type: object
+    properties:
+      id:
+        type: string
+        required: true
+      value:
+        type: string
+        required: true
+      violations?:
+        type: array
+        items: TaxValidationViolation
+  OtherContact1:
+    type: object
+    properties:
+      channel_type: Max4Text
+      identification?: Max128Text
+  Contact4:
+    type: object
+    properties:
+      name_prefix?: NamePrefix2Code
+      name?: Max140Text
+      phone_number?: PhoneNumber
+      mobile_number?: PhoneNumber
+      fax_number?: PhoneNumber
+      email_address?: Max2048Text
+      email_purpose?: Max35Text
+      job_title?: Max35Text
+      responsibility?: Max35Text
+      department?: Max70Text
+      other?:
+        type: array
+        items: OtherContact1
+      preferred_method?: PreferredContactMethod1Code
+  Max34Text:
+    description: Specifies a character string with a maximum length of 34 characters.
+    type: string
+    minLength: 1
+    maxLength: 34
+  BranchData3:
+    type: object
+    properties:
+      identification?: Max35Text
+      lei?: LEIIdentifier
+      name?: Max140Text
+      postal_address?: PostalAddress24
+  ServiceLevel8Choice:
+    type: object
+    (amf-or):
+      -
+        type: any
+      -
+        type: any
+    properties:
+      code?: ExternalServiceLevel1Code
+      proprietary?: Max35Text
+  TaxFilingOrigin:
+    description: Tax filing origin that represents where the tax filing originated from. API - via this API or ONLINE - migrated from online systems.
+    enum:
+      - API
+      - ONLINE
+    type: string
+  CreditorReferenceType2:
+    type: object
+    properties:
+      code_or_proprietary: CreditorReferenceType1Choice
+      issuer?: Max35Text
+  PreferredContactMethod1Code:
+    enum:
+      - LETT
+      - MAIL
+      - PHON
+      - FAXX
+      - CELL
+    type: string
+  HeartbeatResponse:
+    description: Heartbeat response
+    properties:
+      response_code?:
+        description: Values:<ul><li>ALIVE = Success, everything is fine</li></ul> <b>Note:</b> more codes may be added in the future
+        enum:
+          - ALIVE
+        example:
+          strict: false
+          value: ALIVE
+        type: string
+  DocumentType6Code:
+    enum:
+      - MSIN
+      - CNFA
+      - DNFA
+      - CINV
+      - CREN
+      - DEBN
+      - HIRI
+      - SBIN
+      - CMCN
+      - SOAC
+      - DISP
+      - PUOR
+      - BOLD
+      - VCHR
+      - AROI
+      - TSUT
+    type: string
+  ISOTime:
+    type: string
+  ExternalCashClearingSystem1Code:
+    type: string
+  StatusReasonInformation12:
+    type: object
+    properties:
+      originator?: PartyIdentification135
+      reason?: StatusReason6Choice
+      additional_information?:
+        type: array
+        items: Max105Text
+  RemittanceAmount2:
+    type: object
+    properties:
+      due_payable_amount?: ActiveOrHistoricCurrencyAndAmount
+      discount_applied_amount?:
+        type: array
+        items: DiscountAmountAndType1
+      credit_note_amount?: ActiveOrHistoricCurrencyAndAmount
+      tax_amount?:
+        type: array
+        items: TaxAmountAndType1
+      adjustment_amount_and_reason?:
+        type: array
+        items: DocumentAdjustment1
+      remitted_amount?: ActiveOrHistoricCurrencyAndAmount
+  Exact4AlphaNumericText:
+    description: Specifies an alphanumeric string with a length of 4 characters.
+    type: string
+    pattern: "[a-zA-Z0-9]{4}"
+  Purpose2Choice:
+    type: object
+    (amf-or):
+      -
+        type: any
+      -
+        type: any
+    properties:
+      code?: ExternalPurpose1Code
+      proprietary?: Max35Text
+  ExternalPersonIdentification1Code:
+    type: string
+  ActiveOrHistoricCurrencyAndAmount:
+    type: object
+    properties:
+      amount?:
+        type: number
+        (amf-exclusiveMinimum): true
+        minimum: 0
+      currency?: ActiveOrHistoricCurrencyCode
+  Authorisation1Code:
+    enum:
+      - AUTH
+      - FDET
+      - FSUM
+      - ILEV
+    type: string
+  InstructionForNextAgent1:
+    type: object
+    properties:
+      code?: Instruction4Code
+      instruction_information?: Max140Text
+  Exact2NumericText:
+    description: Specifies a numeric string with an exact length of 2 digits.
+    type: string
+    pattern: "[0-9]{2}"
+  Priority3Code:
+    enum:
+      - URGT
+      - HIGH
+      - NORM
+    type: string
+  RegulatoryReportingType1Code:
+    enum:
+      - CRED
+      - DEBT
+      - BOTH
+    type: string
+  MandateClassification1Choice:
+    type: object
+    (amf-or):
+      -
+        type: any
+      -
+        type: any
+    properties:
+      code?: MandateClassification1Code
+      proprietary?: Max35Text
+  Max10Text:
+    description: Specifies a character string with a maximum length of 10 characters.
+    type: string
+    minLength: 1
+    maxLength: 10
+  RemittanceInformation16:
+    type: object
+    properties:
+      unstructured?:
+        type: array
+        items: Max140Text
+      structured?:
+        type: array
+        items: StructuredRemittanceInformation16
+  ClearingChannel2Code:
+    enum:
+      - RTGS
+      - RTNS
+      - MPNS
+      - BOOK
+    type: string
+  ActiveCurrencyAndAmount:
+    type: object
+    properties:
+      amount?:
+        type: number
+        (amf-exclusiveMinimum): true
+        minimum: 0
+      currency?: ActiveCurrencyCode
+  BaseOneRate:
+    type: number
+  ExternalClearingSystemIdentification1Code:
+    type: string
+  PaymentTransaction119:
+    type: object
+    properties:
+      reversal_identification: Max35Text
+      original_group_information?: OriginalGroupInformation29
+      original_instruction_identification?: Max35Text
+      original_end_to_end_identification?: Max35Text
+      original_transaction_identification?: Max35Text
+      original_uetr?: UUIDv4Identifier
+      original_clearing_system_reference?: Max35Text
+      original_interbank_settlement_amount?: ActiveOrHistoricCurrencyAndAmount
+      reversed_interbank_settlement_amount: ActiveCurrencyAndAmount
+      interbank_settlement_date?: ISODate
+      settlement_priority?: Priority3Code
+      settlement_time_indication?: SettlementDateTimeIndication1
+      reversed_instructed_amount?: ActiveOrHistoricCurrencyAndAmount
+      exchange_rate?: BaseOneRate
+      compensation_amount?: ActiveOrHistoricCurrencyAndAmount
+      charge_bearer?: ChargeBearerType1Code
+      charges_information?:
+        type: array
+        items: Charges7
+      instructing_agent?: BranchAndFinancialInstitutionIdentification6
+      instructed_agent?: BranchAndFinancialInstitutionIdentification6
+      reversal_reason_information?:
+        type: array
+        items: PaymentReversalReason9
+      original_transaction_reference?: OriginalTransactionReference31
+      supplementary_data?:
+        type: array
+        items: SupplementaryData1
+  FIToFIPaymentStatusReportV11:
+    type: object
+    examples:
+      make-bill-payment:
+        strict: false
+        value:
+          group_header:
+            message_identification: b3d049b9be5542479f04d5de456a56d8
+            creation_date_time: 2020-09-10T00:36:32.476Z
+          original_group_information_and_status:
+            -
+              original_message_identification: b4b5a15b07c84665b904ed7e486dc32c
+              original_message_name_identification: pacs.008.001.09
+              original_creation_date_time: 2020-09-10T00:36:31.244Z
+              original_number_of_transactions: "1"
+              original_control_sum: 1.23
+          transaction_information_and_status:
+            -
+              original_end_to_end_identification: "123456"
+              original_transaction_identification: 5b4ddd1d1f7c439b920e4b94103665f1
+              acceptance_date_time: 2020-09-10T18:30:40.362Z
+              original_transaction_reference:
+                interbank_settlement_amount:
+                  amount: 1.23
+                  currency: CAD
+                interbank_settlement_date: 2020-09-10
+                settlement_information:
+                  settlement_method: INDA
+                debtor:
+                  party:
+                    identification:
+                      organisation_identification:
+                        other:
+                          -
+                            identification: "10001001"
+                    contact_details:
+                      name: John Doe
+                debtor_agent:
+                  financial_institution_identification:
+                    clearing_system_member_identification:
+                      member_identification: "080912345"
+                creditor_agent:
+                  financial_institution_identification:
+                    clearing_system_member_identification:
+                      member_identification: "080912010"
+                creditor:
+                  party:
+                    identification:
+                      organisation_identification:
+                        other:
+                          -
+                            identification: "10001"
+                creditor_account:
+                  identification:
+                    other:
+                      identification: 10001-111
+      reverse-bill-payment:
+        strict: false
+        value:
+          group_header:
+            message_identification: ee99164dad684d02a58f1c462b78ddbf
+            creation_date_time: 2020-09-10T00:36:35.476Z
+          original_group_information_and_status:
+            -
+              original_message_identification: 0f18a34f36724d89b8cb0d59bb47321f
+              original_message_name_identification: pacs.007.001.10
+              original_creation_date_time: 2020-09-10T21:53:13.259Z
+              original_number_of_transactions: "1"
+              original_control_sum: 7.01
+          transaction_information_and_status:
+            -
+              original_end_to_end_identification: "123456"
+              original_transaction_identification: 5b4ddd1d1f7c439b920e4b94103665f1
+              acceptance_date_time: 2020-09-10T18:30:40.362Z
+              original_transaction_reference:
+                interbank_settlement_amount:
+                  amount: 7.01
+                  currency: CAD
+                interbank_settlement_date: 2020-09-10
+                settlement_information:
+                  settlement_method: INDA
+                payment_type_information:
+                  category_purpose:
+                    proprietary: BILL
+                debtor:
+                  party:
+                    identification:
+                      organisation_identification:
+                        other:
+                          -
+                            identification: "10001001"
+                    contact_details:
+                      name: John Doe
+                debtor_agent:
+                  financial_institution_identification:
+                    clearing_system_member_identification:
+                      member_identification: "080912345"
+                creditor_agent:
+                  financial_institution_identification:
+                    clearing_system_member_identification:
+                      member_identification: "080912010"
+                creditor:
+                  party:
+                    identification:
+                      organisation_identification:
+                        other:
+                          -
+                            identification: "10001"
+                creditor_account:
+                  identification:
+                    other:
+                      identification: 10001-111
+    properties:
+      group_header: GroupHeader91
+      original_group_information_and_status?:
+        type: array
+        items: OriginalGroupHeader17
+      transaction_information_and_status?:
+        type: array
+        items: PaymentTransaction123
+      supplementary_data?:
+        type: array
+        items: SupplementaryData1
+  DecimalNumber:
+    type: number
+    (amf-exclusiveMinimum): true
+    minimum: 0
+  OriginalGroupHeader17:
+    type: object
+    properties:
+      original_message_identification: Max35Text
+      original_message_name_identification: Max35Text
+      original_creation_date_time?: ISODateTime
+      original_number_of_transactions?: Max15NumericText
+      original_control_sum?: DecimalNumber
+      group_status?: ExternalPaymentGroupStatus1Code
+      status_reason_information?:
+        type: array
+        items: StatusReasonInformation12
+      number_of_transactions_per_status?:
+        type: array
+        items: NumberOfTransactionsPerStatus5
+  BranchAndFinancialInstitutionIdentification6:
+    type: object
+    properties:
+      financial_institution_identification: FinancialInstitutionIdentification18
+      branch_identification?: BranchData3
+  PaymentIdentification13:
+    type: object
+    properties:
+      instruction_identification?: Max35Text
+      end_to_end_identification: Max35Text
+      transaction_identification: Max35Text
+      uetr?: UUIDv4Identifier
+      clearing_system_reference?: Max35Text
+  BasicErrorResponse:
+    type: object
+    properties:
+      message:
+        description: The user friendly message explaining the error
+        example:
+          strict: false
+          value: Unexpected error
+        type: string
+        required: true
+  ExternalCashAccountType1Code:
+    type: string
+  TaxFilingValidationResponseField:
+    type: object
+    properties:
+      id:
+        type: string
+        required: true
+      value:
+        type: string
+        required: true
+      violations?:
+        type: array
+        items: TaxValidationViolation
+  Instruction4Code:
+    enum:
+      - PHOA
+      - TELA
+    type: string
+  AddressType3Choice:
+    type: object
+    (amf-or):
+      -
+        type: any
+      -
+        type: any
+    properties:
+      code?: AddressType2Code
+      proprietary?: GenericIdentification30
+  TaxRecordPeriod1Code:
+    enum:
+      - MM01
+      - MM02
+      - MM03
+      - MM04
+      - MM05
+      - MM06
+      - MM07
+      - MM08
+      - MM09
+      - MM10
+      - MM11
+      - MM12
+      - QTR1
+      - QTR2
+      - QTR3
+      - QTR4
+      - HLF1
+      - HLF2
+    type: string
+  TaxValidationViolation:
+    type: object
+    properties:
+      code:
+        description: The code that identifies the violation
+        type: integer
+        required: true
+      message:
+        description: The violation descriptive message
+        type: string
+        required: true
+  MandateRelatedData1Choice:
+    type: object
+    (amf-or):
+      -
+        type: any
+      -
+        type: any
+    properties:
+      direct_debit_mandate?: MandateRelatedInformation14
+      credit_transfer_mandate?: CreditTransferMandateData1
+  PaymentTypeInformation28:
+    type: object
+    properties:
+      instruction_priority?: Priority2Code
+      clearing_channel?: ClearingChannel2Code
+      service_level?:
+        type: array
+        items: ServiceLevel8Choice
+      local_instrument?: LocalInstrument2Choice
+      category_purpose?: CategoryPurpose1Choice
+  SettlementMethod1Code:
+    enum:
+      - INDA
+      - INGA
+      - COVE
+      - CLRG
+    type: string
+  DiscountAmountType1Choice:
+    type: object
+    (amf-or):
+      -
+        type: any
+      -
+        type: any
+    properties:
+      code?: ExternalDiscountAmountType1Code
+      proprietary?: Max35Text
+  TaxFilingValidationRequest:
+    type: object
+    examples:
+      validate-tax-filing:
+        strict: false
+        value:
+          schema_version: 1
+          tax_form_id: RC159_TT20
+          filing_date: 2021-06-06
+          contact_name: Test Name
+          contact_language: FR
+          fields:
+            -
+              id: business.name
+              value: ABC Bikes
+            -
+              id: business.account.federal
+              value: 123456782RT0001
+            -
+              id: payment.amount.federal
+              value: "1234.56"
+    properties:
+      schema_version:
+        type: integer
+        required: true
+      tax_form_id:
+        type: string
+        required: true
+      filing_date:
+        type: date-only
+        required: true
+      contact_name:
+        type: string
+        minLength: 1
+        maxLength: 35
+        required: true
+      contact_language?:
+        enum:
+          - EN
+          - FR
+        type: string
+      fields:
+        type: array
+        items: TaxFilingValidationRequestField
+        required: true
+  AccountSchemeName1Choice:
+    type: object
+    (amf-or):
+      -
+        type: any
+      -
+        type: any
+    properties:
+      code?: ExternalAccountIdentification1Code
+      proprietary?: Max35Text
+  BICFIDec2014Identifier:
+    type: string
+    pattern: "[A-Z0-9]{4,4}[A-Z]{2,2}[A-Z0-9]{2,2}([A-Z0-9]{3,3}){0,1}"
+  ClearingSystemMemberIdentification2:
+    type: object
+    properties:
+      clearing_system_identification?: ClearingSystemIdentification2Choice
+      member_identification: Max35Text
+  GroupHeader89:
+    type: object
+    properties:
+      message_identification: Max35Text
+      creation_date_time: ISODateTime
+      authorisation?:
+        type: array
+        items: Authorisation1Choice
+        maxItems: 2
+      batch_booking?: BatchBookingIndicator
+      number_of_transactions: Max15NumericText
+      control_sum?: DecimalNumber
+      group_reversal?: TrueFalseIndicator
+      total_reversed_interbank_settlement_amount?: ActiveCurrencyAndAmount
+      interbank_settlement_date?: ISODate
+      settlement_information: SettlementInstruction7
+      instructing_agent?: BranchAndFinancialInstitutionIdentification6
+      instructed_agent?: BranchAndFinancialInstitutionIdentification6
+  DiscountAmountAndType1:
+    type: object
+    properties:
+      type?: DiscountAmountType1Choice
+      amount: ActiveOrHistoricCurrencyAndAmount
+  MandateTypeInformation2:
+    type: object
+    properties:
+      service_level?: ServiceLevel8Choice
+      local_instrument?: LocalInstrument2Choice
+      category_purpose?: CategoryPurpose1Choice
+      classification?: MandateClassification1Choice
+  AmountType4Choice:
+    type: object
+    (amf-or):
+      -
+        type: any
+      -
+        type: any
+    properties:
+      instructed_amount?: ActiveOrHistoricCurrencyAndAmount
+      equivalent_amount?: EquivalentAmount2
+  Charges7:
+    type: object
+    properties:
+      amount: ActiveOrHistoricCurrencyAndAmount
+      agent: BranchAndFinancialInstitutionIdentification6
+  DateAndDateTime2Choice:
+    type: object
+    (amf-or):
+      -
+        type: any
+      -
+        type: any
+    properties:
+      date?: ISODate
+      date_time?: ISODateTime
+  TaxTypeId:
+    enum:
+      - GST_HST
+      - NON_RESIDENT_WITHHOLDING_TAX
+      - PAYROLL_TAX
+      - EXCISE_DUTY
+      - EXCISE_TAX
+      - INSURANCE_PREMIUM_TAX
+      - AIR_TRAVELERS_SECURITY_CHARGE
+      - SOFTWOOD_LUMBER
+      - CORPORATION_TAX
+      - GST_HST_Q
+      - WORKERS_COMP_BOARD_NOVA_SCOTIA
+    type: string
+  CashAccountType2Choice:
+    type: object
+    (amf-or):
+      -
+        type: any
+      -
+        type: any
+    properties:
+      code?: ExternalCashAccountType1Code
+      proprietary?: Max35Text
+  TaxFormSchemaField:
+    type: object
+    properties:
+      id:
+        description: The unique identifier of schema field.
+        type: string
+        required: true
+      type: TaxFormSchemaFieldType
+      field_label?:
+        description: The label of schema field.
+        type: string
+      field_order?:
+        description: The sort order of schema field.
+        type: integer
+      pattern?:
+        description: The regular expression pattern of schema field. Can be used for front-end input validation.
+        type: string
+      form_line_number?:
+        description: The line number of schema field as appears on tax form. Applicable to some forms.
+        type: integer
+      iso_mapping?:
+        description: The path of data element of ISO 20022 pacs.008 message that field value is mapped to.
+        type: string
+      hint?:
+        description: Hint related to the field values.
+        type: string
+      placeholder?:
+        description: Generic placeholder for the field.
+        type: string
+  TaxFilingHistoryDetails:
+    type: object
+    properties:
+      schema_version:
+        description: The version of tax form schema.
+        type: integer
+        required: true
+      filing_date:
+        description: The date of filing.
+        type: date-only
+        required: true
+      origin?: TaxFilingOrigin
+      business_account?:
+        description: The business account number.
+        type: string
+      trace_number?:
+        description: The trace number (payment confirmation ID).
+        type: integer
+      member_number?:
+        description: The unique identifier of a member.
+        type: string
+      amount_paid?:
+        description: The paid amount.
+        type: number
+      contact_name?:
+        description: Contact Name
+        type: string
+      contact_language?:
+        description: Contact Language
+        enum:
+          - EN
+          - FR
+        type: string
+      fields:
+        type: array
+        items: TaxFilingHistoryField
+        required: true
+  TaxParty1:
+    type: object
+    properties:
+      tax_identification?: Max35Text
+      registration_identification?: Max35Text
+      tax_type?: Max35Text
+  NumberOfTransactionsPerStatus5:
+    type: object
+    properties:
+      detailed_number_of_transactions: Max15NumericText
+      detailed_status: ExternalPaymentTransactionStatus1Code
+      detailed_control_sum?: DecimalNumber
+  PendingPaymentPage:
+    (amf-and):
+      - Page
+      -
+        type: object
+        properties:
+          content:
+            description: List of PendingPaymentDto objects
+            type: array
+            items: PendingPaymentDto
+            required: true
+    type: any
+  DocumentAdjustment1:
+    type: object
+    properties:
+      amount: ActiveOrHistoricCurrencyAndAmount
+      credit_debit_indicator?: CreditDebitCode
+      reason?: Max4Text
+      additional_information?: Max140Text
+  TaxAmountType1Choice:
+    type: object
+    (amf-or):
+      -
+        type: any
+      -
+        type: any
+    properties:
+      code?: ExternalTaxAmountType1Code
+      proprietary?: Max35Text
+  ExternalReversalReason1Code:
+    type: string
+  Garnishment3:
+    type: object
+    properties:
+      type: GarnishmentType1
+      garnishee?: PartyIdentification135
+      garnishment_administrator?: PartyIdentification135
+      reference_number?: Max140Text
+      date?: ISODate
+      remitted_amount?: ActiveOrHistoricCurrencyAndAmount
+      family_medical_insurance_indicator?: TrueFalseIndicator
+      employee_termination_indicator?: TrueFalseIndicator
+  FinancialIdentificationSchemeName1Choice:
+    type: object
+    (amf-or):
+      -
+        type: any
+      -
+        type: any
+    properties:
+      code?: ExternalFinancialInstitutionIdentification1Code
+      proprietary?: Max35Text
+  ReversalReason4Choice:
+    type: object
+    (amf-or):
+      -
+        type: any
+      -
+        type: any
+    properties:
+      code?: ExternalReversalReason1Code
+      proprietary?: Max35Text
+  PercentageRate:
+    type: number
+  Max128Text:
+    description: Specifies a character string with a maximum length of 128 characters.
+    type: string
+    minLength: 1
+    maxLength: 128
+  TaxFilingValidationResponseStatus:
+    enum:
+      - VALID
+      - INVALID
+    type: string
+  Max140Text:
+    description: Specifies a character string with a maximum length of 140 characters.
+    type: string
+    minLength: 1
+    maxLength: 140
+  GenericOrganisationIdentification1:
+    type: object
+    properties:
+      identification: Max35Text
+      scheme_name?: OrganisationIdentificationSchemeName1Choice
+      issuer?: Max35Text
+  ExternalTaxAmountType1Code:
+    type: string
+  ExternalAccountIdentification1Code:
+    type: string
+  TaxRecord2:
+    type: object
+    properties:
+      type?: Max35Text
+      category?: Max35Text
+      category_details?: Max35Text
+      debtor_status?: Max35Text
+      certificate_identification?: Max35Text
+      forms_code?: Max35Text
+      period?: TaxPeriod2
+      tax_amount?: TaxAmount2
+      additional_information?: Max140Text
+  ClearingSystemIdentification3Choice:
+    type: object
+    (amf-or):
+      -
+        type: any
+      -
+        type: any
+    properties:
+      code?: ExternalCashClearingSystem1Code
+      proprietary?: Max35Text
+  NamePrefix2Code:
+    enum:
+      - DOCT
+      - MIST
+      - MISS
+      - MADM
+      - MIKS
+    type: string
+  OriginalGroupHeader16:
+    type: object
+    properties:
+      original_message_identification: Max35Text
+      original_message_name_identification: Max35Text
+      original_creation_date_time?: ISODateTime
+      reversal_reason_information?:
+        type: array
+        items: PaymentReversalReason9
+  PersonIdentification13:
+    type: object
+    properties:
+      date_and_place_of_birth?: DateAndPlaceOfBirth1
+      other?:
+        type: array
+        items: GenericPersonIdentification1
+  DocumentLineType1:
+    type: object
+    properties:
+      code_or_proprietary: DocumentLineType1Choice
+      issuer?: Max35Text
+  TaxPaymentType:
+    type: object
+    properties:
+      id: TaxPaymentTypeId
+      name:
+        description: The description of payment type.
+        type: string
+        required: true
+  TaxFilingHistory:
+    type: object
+    properties:
+      tax_filing_id:
+        description: The unique identifier of tax filing.
+        type: string
+        required: true
+      tax_form: TaxForm
+      tax_filing: TaxFilingHistoryDetails
+  OriginalGroupInformation29:
+    type: object
+    properties:
+      original_message_identification: Max35Text
+      original_message_name_identification: Max35Text
+      original_creation_date_time?: ISODateTime
+  TaxFilingSubmissionResponse:
+    type: object
+    examples:
+      submit-tax-filing:
+        strict: false
+        value:
+          schema_version: 1
+          tax_form_id: RC159_TT20
+          filing_date: 2021-02-01
+          member_number: "99999999999999"
+          trace_number: 654321
+          tax_filing_id: 611ecc0c7df611eb8dfd4b1d768da101
+          contact_name: test
+          contact_language: EN
+          fields:
+            -
+              id: business.name
+              value: ABC Bikes
+            -
+              id: business.account.federal
+              value: 213456789RT0001
+            -
+              id: payment.amount.federal
+              value: "1234.56"
+    properties:
+      schema_version:
+        type: integer
+        required: true
+      tax_form_id:
+        type: string
+        required: true
+      trace_number?:
+        type: number
+      contact_name:
+        type: string
+        required: true
+      contact_language?:
+        enum:
+          - EN
+          - FR
+        type: string
+      fields:
+        type: array
+        items: TaxFilingSubmissionResponseField
+        required: true
+  CreditTransferMandateData1:
+    type: object
+    properties:
+      mandate_identification?: Max35Text
+      type?: MandateTypeInformation2
+      date_of_signature?: ISODate
+      date_of_verification?: ISODateTime
+      electronic_signature?: Max10KBinary
+      first_payment_date?: ISODate
+      final_payment_date?: ISODate
+      frequency?: Frequency36Choice
+      reason?: MandateSetupReason1Choice
+  SettlementInstruction7:
+    type: object
+    properties:
+      settlement_method: SettlementMethod1Code
+      settlement_account?: CashAccount38
+      clearing_system?: ClearingSystemIdentification3Choice
+      instructing_reimbursement_agent?: BranchAndFinancialInstitutionIdentification6
+      instructing_reimbursement_agent_account?: CashAccount38
+      instructed_reimbursement_agent?: BranchAndFinancialInstitutionIdentification6
+      instructed_reimbursement_agent_account?: CashAccount38
+      third_reimbursement_agent?: BranchAndFinancialInstitutionIdentification6
+      third_reimbursement_agent_account?: CashAccount38
+  CashAccount38:
+    type: object
+    properties:
+      identification: AccountIdentification4Choice
+      type?: CashAccountType2Choice
+      currency?: ActiveOrHistoricCurrencyCode
+      name?: Max70Text
+      proxy?: ProxyAccountIdentification1
+  DocumentType3Code:
+    enum:
+      - RADM
+      - RPIN
+      - FXDR
+      - DISP
+      - PUOR
+      - SCOR
+    type: string
+annotationTypes:
+  amf-serverDescription:
+    type: any
+  amf-exclusiveMinimum:
+    type: any
+  amf-binding:
+    type: any
+  amf-pattern:
+    type: any
+  amf-payloads:
+    type: any
+  amf-exclusiveMaximum:
+    type: any
+  amf-consumes:
+    type: any
+  amf-additionalProperties:
+    type: any
+  amf-or:
+    type: any
+  amf-url:
+    type: any
+  amf-externalDocs:
+    type: any
+  amf-flow:
+    type: any
+  amf-oasDeprecated:
+    type: any
+  amf-contact:
+    type: any
+  amf-multipleOf:
+    type: any
+  amf-xor:
+    type: any
+  amf-not:
+    type: any
+  amf-callbacks:
+    type: any
+  amf-produces:
+    type: any
+  amf-format:
+    type: any
+  amf-license:
+    type: any
+  amf-summary:
+    type: any
+  amf-responses:
+    type: any
+  amf-maximum:
+    type: any
+  amf-tags:
+    type: any
+  amf-dependencies:
+    type: any
+  amf-readOnly:
+    type: any
+  amf-tuple:
+    type: any
+  amf-examples:
+    type: any
+  amf-collectionFormat:
+    type: any
+  amf-termsOfService:
+    type: any
+  amf-servers:
+    type: any
+  amf-xone:
+    type: any
+  amf-defaultResponse:
+    type: any
+  amf-baseUriParameters:
+    type: any
+  amf-parameters:
+    type: any
+  amf-minimum:
+    type: any
+  amf-recursive:
+    type: any
+  amf-and:
+    type: any
+securitySchemes:
+  api_key:
+    type: x-apiKey
+    describedBy:
+      headers:
+        x-api-key?:
+          type: any
+  c1_authentication:
+    type: x-apiKey
+    describedBy:
+      headers:
+        x-c1-auth?:
+          type: any
+title: Bill Payment API
+baseUri: https://api.billpay-uat.central1.io/service
+(amf-serverDescription): Staging (UAT) server
+description: Bill Payment API is a web service that exposes resources allowing customers to process bill payment instructions.
+version: 1.1.0
+(amf-contact):
+  name: Andrew Makarchuk
+  email: SoftwareManagementPaymentStream@central1.com
+(amf-tags):
+  -
+    name: Payment processing services
+    description: Resources for sending payment instructions.
+  -
+    name: Tax filing services
+    description: Resources for originating tax filings and payments.
+  -
+    name: System services
+    description: Resources for supporting and monitoring the system.
+/v1/payments/credits:
+  post:
+    displayName: makeBillPayment
+    (amf-tags):
+      - Payment processing services
+    body:
+      application/json: FIToFICustomerCreditTransferV09
+    responses:
+      "400":
+        description: Bad Request - Validation Errors
+        body:
+          application/json:
+            (amf-and):
+              -
+                (amf-and):
+                  -
+                    type: object
+                    properties:
+                      message:
+                        description: The user friendly message explaining the error
+                        example:
+                          strict: false
+                          value: Unexpected error
+                        type: string
+                        required: true
+                  -
+                    type: object
+                    properties:
+                      http_status_code:
+                        description: The HTTP Status code
+                        example:
+                          strict: false
+                          value: 400
+                        type: integer
+                        minimum: 100
+                        maximum: 600
+                        required: true
+                      response_code:
+                        description: The application response code to identify the error
+                        example:
+                          strict: false
+                          value: 21026
+                        type: integer
+                        required: true
+                type: any
+              -
+                type: object
+                properties:
+                  violations?:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        code:
+                          description: The application response code to identify the error
+                          example:
+                            strict: false
+                            value: 41026
+                          type: integer
+                          required: true
+                        message:
+                          description: The user friendly message explaining the error
+                          example:
+                            strict: false
+                            value: "body.group_header: Field message_identification is required."
+                          type: string
+                          required: true
+                        source?:
+                          description: The identifier of invalid data element
+                          example:
+                            strict: false
+                            value: body.group_header
+                          type: string
+            type: any
+      "401":
+        description: Unauthorized
+        body:
+          application/json:
+            type: object
+            properties:
+              message:
+                description: The user friendly message explaining the error
+                example:
+                  strict: false
+                  value: Unexpected error
+                type: string
+                required: true
+      "403":
+        description: Forbidden
+        body:
+          application/json:
+            type: object
+            properties:
+              message:
+                description: The user friendly message explaining the error
+                example:
+                  strict: false
+                  value: Unexpected error
+                type: string
+                required: true
+      "404":
+        description: Resource Not Found
+        body:
+          application/json:
+            type: object
+            properties:
+              message:
+                description: The user friendly message explaining the error
+                example:
+                  strict: false
+                  value: Unexpected error
+                type: string
+                required: true
+      "422":
+        description: Unprocessable Entity
+        body:
+          application/json:
+            (amf-and):
+              -
+                type: object
+                properties:
+                  message:
+                    description: The user friendly message explaining the error
+                    example:
+                      strict: false
+                      value: Unexpected error
+                    type: string
+                    required: true
+              -
+                type: object
+                properties:
+                  http_status_code:
+                    description: The HTTP Status code
+                    example:
+                      strict: false
+                      value: 400
+                    type: integer
+                    minimum: 100
+                    maximum: 600
+                    required: true
+                  response_code:
+                    description: The application response code to identify the error
+                    example:
+                      strict: false
+                      value: 21026
+                    type: integer
+                    required: true
+            type: any
+      "429":
+        description: Too many requests; blocked due to rate limiting
+        body:
+          application/json:
+            type: object
+            properties:
+              message:
+                description: The user friendly message explaining the error
+                example:
+                  strict: false
+                  value: Unexpected error
+                type: string
+                required: true
+      "500":
+        description: Internal Server Error
+        body:
+          application/json:
+            (amf-and):
+              -
+                type: object
+                properties:
+                  message:
+                    description: The user friendly message explaining the error
+                    example:
+                      strict: false
+                      value: Unexpected error
+                    type: string
+                    required: true
+              -
+                type: object
+                properties:
+                  http_status_code:
+                    description: The HTTP Status code
+                    example:
+                      strict: false
+                      value: 400
+                    type: integer
+                    minimum: 100
+                    maximum: 600
+                    required: true
+                  response_code:
+                    description: The application response code to identify the error
+                    example:
+                      strict: false
+                      value: 21026
+                    type: integer
+                    required: true
+            type: any
+      "503":
+        description: Service Unavailable
+        body:
+          application/json:
+            type: object
+            properties:
+              message:
+                description: The user friendly message explaining the error
+                example:
+                  strict: false
+                  value: Unexpected error
+                type: string
+                required: true
+      "504":
+        description: Gateway Timeout
+        body:
+          application/json:
+            type: object
+            properties:
+              message:
+                description: The user friendly message explaining the error
+                example:
+                  strict: false
+                  value: Unexpected error
+                type: string
+                required: true
+      "201":
+        description: Payment deposited
+        body:
+          application/json: FIToFIPaymentStatusReportV11
+    securedBy:
+      - api_key
+      - c1_authentication
+/v1/payments/pending:
+  get:
+    displayName: listPendingBillPayments
+    (amf-tags):
+      - Payment processing services
+    queryParameters:
+      member_number:
+        description: member number of the pending payments
+        required: true
+        type: integer
+      from_date:
+        description: Start date/time.
+        required: false
+        type: ISODateTime
+      to_date:
+        description: End date/time.
+        required: false
+        type: ISODateTime
+      offset:
+        description: offset is starting point of payment filter; if offset is not provided it would be defaulted to zero;
+        required: false
+        type: integer
+      max_response_items:
+        description: Maximum number of response payments to be returned. All payments are returned if this field is absent.
+        required: false
+        type: integer
+        maximum: 999
+    responses:
+      "400":
+        description: Bad Request - Validation Errors
+        body:
+          application/json:
+            (amf-and):
+              -
+                (amf-and):
+                  -
+                    type: object
+                    properties:
+                      message:
+                        description: The user friendly message explaining the error
+                        example:
+                          strict: false
+                          value: Unexpected error
+                        type: string
+                        required: true
+                  -
+                    type: object
+                    properties:
+                      http_status_code:
+                        description: The HTTP Status code
+                        example:
+                          strict: false
+                          value: 400
+                        type: integer
+                        minimum: 100
+                        maximum: 600
+                        required: true
+                      response_code:
+                        description: The application response code to identify the error
+                        example:
+                          strict: false
+                          value: 21026
+                        type: integer
+                        required: true
+                type: any
+              -
+                type: object
+                properties:
+                  violations?:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        code:
+                          description: The application response code to identify the error
+                          example:
+                            strict: false
+                            value: 41026
+                          type: integer
+                          required: true
+                        message:
+                          description: The user friendly message explaining the error
+                          example:
+                            strict: false
+                            value: "body.group_header: Field message_identification is required."
+                          type: string
+                          required: true
+                        source?:
+                          description: The identifier of invalid data element
+                          example:
+                            strict: false
+                            value: body.group_header
+                          type: string
+            type: any
+      "401":
+        description: Unauthorized
+        body:
+          application/json:
+            type: object
+            properties:
+              message:
+                description: The user friendly message explaining the error
+                example:
+                  strict: false
+                  value: Unexpected error
+                type: string
+                required: true
+      "403":
+        description: Forbidden
+        body:
+          application/json:
+            type: object
+            properties:
+              message:
+                description: The user friendly message explaining the error
+                example:
+                  strict: false
+                  value: Unexpected error
+                type: string
+                required: true
+      "404":
+        description: Resource Not Found
+        body:
+          application/json:
+            type: object
+            properties:
+              message:
+                description: The user friendly message explaining the error
+                example:
+                  strict: false
+                  value: Unexpected error
+                type: string
+                required: true
+      "429":
+        description: Too many requests; blocked due to rate limiting
+        body:
+          application/json:
+            type: object
+            properties:
+              message:
+                description: The user friendly message explaining the error
+                example:
+                  strict: false
+                  value: Unexpected error
+                type: string
+                required: true
+      "500":
+        description: Internal Server Error
+        body:
+          application/json:
+            (amf-and):
+              -
+                type: object
+                properties:
+                  message:
+                    description: The user friendly message explaining the error
+                    example:
+                      strict: false
+                      value: Unexpected error
+                    type: string
+                    required: true
+              -
+                type: object
+                properties:
+                  http_status_code:
+                    description: The HTTP Status code
+                    example:
+                      strict: false
+                      value: 400
+                    type: integer
+                    minimum: 100
+                    maximum: 600
+                    required: true
+                  response_code:
+                    description: The application response code to identify the error
+                    example:
+                      strict: false
+                      value: 21026
+                    type: integer
+                    required: true
+            type: any
+      "503":
+        description: Service Unavailable
+        body:
+          application/json:
+            type: object
+            properties:
+              message:
+                description: The user friendly message explaining the error
+                example:
+                  strict: false
+                  value: Unexpected error
+                type: string
+                required: true
+      "504":
+        description: Gateway Timeout
+        body:
+          application/json:
+            type: object
+            properties:
+              message:
+                description: The user friendly message explaining the error
+                example:
+                  strict: false
+                  value: Unexpected error
+                type: string
+                required: true
+      "200":
+        description: List of pending payments available for reversal
+        body:
+          application/json: PendingPaymentPage
+    securedBy:
+      - api_key
+      - c1_authentication
+/v1/payments/reversals:
+  post:
+    displayName: reverseBillPayment
+    (amf-tags):
+      - Payment processing services
+    body:
+      application/json: FIToFIPaymentReversalV10
+    responses:
+      "400":
+        description: Bad Request - Validation Errors
+        body:
+          application/json:
+            (amf-and):
+              -
+                (amf-and):
+                  -
+                    type: object
+                    properties:
+                      message:
+                        description: The user friendly message explaining the error
+                        example:
+                          strict: false
+                          value: Unexpected error
+                        type: string
+                        required: true
+                  -
+                    type: object
+                    properties:
+                      http_status_code:
+                        description: The HTTP Status code
+                        example:
+                          strict: false
+                          value: 400
+                        type: integer
+                        minimum: 100
+                        maximum: 600
+                        required: true
+                      response_code:
+                        description: The application response code to identify the error
+                        example:
+                          strict: false
+                          value: 21026
+                        type: integer
+                        required: true
+                type: any
+              -
+                type: object
+                properties:
+                  violations?:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        code:
+                          description: The application response code to identify the error
+                          example:
+                            strict: false
+                            value: 41026
+                          type: integer
+                          required: true
+                        message:
+                          description: The user friendly message explaining the error
+                          example:
+                            strict: false
+                            value: "body.group_header: Field message_identification is required."
+                          type: string
+                          required: true
+                        source?:
+                          description: The identifier of invalid data element
+                          example:
+                            strict: false
+                            value: body.group_header
+                          type: string
+            type: any
+      "401":
+        description: Unauthorized
+        body:
+          application/json:
+            type: object
+            properties:
+              message:
+                description: The user friendly message explaining the error
+                example:
+                  strict: false
+                  value: Unexpected error
+                type: string
+                required: true
+      "403":
+        description: Forbidden
+        body:
+          application/json:
+            type: object
+            properties:
+              message:
+                description: The user friendly message explaining the error
+                example:
+                  strict: false
+                  value: Unexpected error
+                type: string
+                required: true
+      "404":
+        description: Resource Not Found
+        body:
+          application/json:
+            type: object
+            properties:
+              message:
+                description: The user friendly message explaining the error
+                example:
+                  strict: false
+                  value: Unexpected error
+                type: string
+                required: true
+      "422":
+        description: Unprocessable Entity
+        body:
+          application/json:
+            (amf-and):
+              -
+                type: object
+                properties:
+                  message:
+                    description: The user friendly message explaining the error
+                    example:
+                      strict: false
+                      value: Unexpected error
+                    type: string
+                    required: true
+              -
+                type: object
+                properties:
+                  http_status_code:
+                    description: The HTTP Status code
+                    example:
+                      strict: false
+                      value: 400
+                    type: integer
+                    minimum: 100
+                    maximum: 600
+                    required: true
+                  response_code:
+                    description: The application response code to identify the error
+                    example:
+                      strict: false
+                      value: 21026
+                    type: integer
+                    required: true
+            type: any
+      "429":
+        description: Too many requests; blocked due to rate limiting
+        body:
+          application/json:
+            type: object
+            properties:
+              message:
+                description: The user friendly message explaining the error
+                example:
+                  strict: false
+                  value: Unexpected error
+                type: string
+                required: true
+      "500":
+        description: Internal Server Error
+        body:
+          application/json:
+            (amf-and):
+              -
+                type: object
+                properties:
+                  message:
+                    description: The user friendly message explaining the error
+                    example:
+                      strict: false
+                      value: Unexpected error
+                    type: string
+                    required: true
+              -
+                type: object
+                properties:
+                  http_status_code:
+                    description: The HTTP Status code
+                    example:
+                      strict: false
+                      value: 400
+                    type: integer
+                    minimum: 100
+                    maximum: 600
+                    required: true
+                  response_code:
+                    description: The application response code to identify the error
+                    example:
+                      strict: false
+                      value: 21026
+                    type: integer
+                    required: true
+            type: any
+      "503":
+        description: Service Unavailable
+        body:
+          application/json:
+            type: object
+            properties:
+              message:
+                description: The user friendly message explaining the error
+                example:
+                  strict: false
+                  value: Unexpected error
+                type: string
+                required: true
+      "504":
+        description: Gateway Timeout
+        body:
+          application/json:
+            type: object
+            properties:
+              message:
+                description: The user friendly message explaining the error
+                example:
+                  strict: false
+                  value: Unexpected error
+                type: string
+                required: true
+      "201":
+        description: Payment reversed
+        body:
+          application/json: FIToFIPaymentStatusReportV11
+    securedBy:
+      - api_key
+      - c1_authentication
+/v1/system/health:
+  get:
+    displayName: healthCheck
+    (amf-summary): This resource is used to monitor the health of the system services.
+    (amf-tags):
+      - System services
+    responses:
+      "400":
+        description: Bad Request - Validation Errors
+        body:
+          application/json:
+            (amf-and):
+              -
+                (amf-and):
+                  -
+                    type: object
+                    properties:
+                      message:
+                        description: The user friendly message explaining the error
+                        example:
+                          strict: false
+                          value: Unexpected error
+                        type: string
+                        required: true
+                  -
+                    type: object
+                    properties:
+                      http_status_code:
+                        description: The HTTP Status code
+                        example:
+                          strict: false
+                          value: 400
+                        type: integer
+                        minimum: 100
+                        maximum: 600
+                        required: true
+                      response_code:
+                        description: The application response code to identify the error
+                        example:
+                          strict: false
+                          value: 21026
+                        type: integer
+                        required: true
+                type: any
+              -
+                type: object
+                properties:
+                  violations?:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        code:
+                          description: The application response code to identify the error
+                          example:
+                            strict: false
+                            value: 41026
+                          type: integer
+                          required: true
+                        message:
+                          description: The user friendly message explaining the error
+                          example:
+                            strict: false
+                            value: "body.group_header: Field message_identification is required."
+                          type: string
+                          required: true
+                        source?:
+                          description: The identifier of invalid data element
+                          example:
+                            strict: false
+                            value: body.group_header
+                          type: string
+            type: any
+      "403":
+        description: Forbidden
+        body:
+          application/json:
+            type: object
+            properties:
+              message:
+                description: The user friendly message explaining the error
+                example:
+                  strict: false
+                  value: Unexpected error
+                type: string
+                required: true
+      "404":
+        description: Resource Not Found
+        body:
+          application/json:
+            type: object
+            properties:
+              message:
+                description: The user friendly message explaining the error
+                example:
+                  strict: false
+                  value: Unexpected error
+                type: string
+                required: true
+      "429":
+        description: Too many requests; blocked due to rate limiting
+        body:
+          application/json:
+            type: object
+            properties:
+              message:
+                description: The user friendly message explaining the error
+                example:
+                  strict: false
+                  value: Unexpected error
+                type: string
+                required: true
+      "500":
+        description: Internal Server Error
+        body:
+          application/json:
+            (amf-and):
+              -
+                type: object
+                properties:
+                  message:
+                    description: The user friendly message explaining the error
+                    example:
+                      strict: false
+                      value: Unexpected error
+                    type: string
+                    required: true
+              -
+                type: object
+                properties:
+                  http_status_code:
+                    description: The HTTP Status code
+                    example:
+                      strict: false
+                      value: 400
+                    type: integer
+                    minimum: 100
+                    maximum: 600
+                    required: true
+                  response_code:
+                    description: The application response code to identify the error
+                    example:
+                      strict: false
+                      value: 21026
+                    type: integer
+                    required: true
+            type: any
+      "503":
+        description: Service Unavailable
+        body:
+          application/json:
+            type: object
+            properties:
+              message:
+                description: The user friendly message explaining the error
+                example:
+                  strict: false
+                  value: Unexpected error
+                type: string
+                required: true
+      "504":
+        description: Gateway Timeout
+        body:
+          application/json:
+            type: object
+            properties:
+              message:
+                description: The user friendly message explaining the error
+                example:
+                  strict: false
+                  value: Unexpected error
+                type: string
+                required: true
+      "200":
+        description: Health Information
+        body:
+          application/json: HealthCheckResponse
+    securedBy:
+      - api_key
+/v1/system/heartbeat:
+  get:
+    displayName: getHeartbeat
+    (amf-summary): This resource is used to monitor the availability of the system.
+    (amf-tags):
+      - System services
+    responses:
+      "400":
+        description: Bad Request - Validation Errors
+        body:
+          application/json:
+            (amf-and):
+              -
+                (amf-and):
+                  -
+                    type: object
+                    properties:
+                      message:
+                        description: The user friendly message explaining the error
+                        example:
+                          strict: false
+                          value: Unexpected error
+                        type: string
+                        required: true
+                  -
+                    type: object
+                    properties:
+                      http_status_code:
+                        description: The HTTP Status code
+                        example:
+                          strict: false
+                          value: 400
+                        type: integer
+                        minimum: 100
+                        maximum: 600
+                        required: true
+                      response_code:
+                        description: The application response code to identify the error
+                        example:
+                          strict: false
+                          value: 21026
+                        type: integer
+                        required: true
+                type: any
+              -
+                type: object
+                properties:
+                  violations?:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        code:
+                          description: The application response code to identify the error
+                          example:
+                            strict: false
+                            value: 41026
+                          type: integer
+                          required: true
+                        message:
+                          description: The user friendly message explaining the error
+                          example:
+                            strict: false
+                            value: "body.group_header: Field message_identification is required."
+                          type: string
+                          required: true
+                        source?:
+                          description: The identifier of invalid data element
+                          example:
+                            strict: false
+                            value: body.group_header
+                          type: string
+            type: any
+      "403":
+        description: Forbidden
+        body:
+          application/json:
+            type: object
+            properties:
+              message:
+                description: The user friendly message explaining the error
+                example:
+                  strict: false
+                  value: Unexpected error
+                type: string
+                required: true
+      "404":
+        description: Resource Not Found
+        body:
+          application/json:
+            type: object
+            properties:
+              message:
+                description: The user friendly message explaining the error
+                example:
+                  strict: false
+                  value: Unexpected error
+                type: string
+                required: true
+      "429":
+        description: Too many requests; blocked due to rate limiting
+        body:
+          application/json:
+            type: object
+            properties:
+              message:
+                description: The user friendly message explaining the error
+                example:
+                  strict: false
+                  value: Unexpected error
+                type: string
+                required: true
+      "500":
+        description: Internal Server Error
+        body:
+          application/json:
+            (amf-and):
+              -
+                type: object
+                properties:
+                  message:
+                    description: The user friendly message explaining the error
+                    example:
+                      strict: false
+                      value: Unexpected error
+                    type: string
+                    required: true
+              -
+                type: object
+                properties:
+                  http_status_code:
+                    description: The HTTP Status code
+                    example:
+                      strict: false
+                      value: 400
+                    type: integer
+                    minimum: 100
+                    maximum: 600
+                    required: true
+                  response_code:
+                    description: The application response code to identify the error
+                    example:
+                      strict: false
+                      value: 21026
+                    type: integer
+                    required: true
+            type: any
+      "503":
+        description: Service Unavailable
+        body:
+          application/json:
+            type: object
+            properties:
+              message:
+                description: The user friendly message explaining the error
+                example:
+                  strict: false
+                  value: Unexpected error
+                type: string
+                required: true
+      "504":
+        description: Gateway Timeout
+        body:
+          application/json:
+            type: object
+            properties:
+              message:
+                description: The user friendly message explaining the error
+                example:
+                  strict: false
+                  value: Unexpected error
+                type: string
+                required: true
+      "200":
+        description: Heartbeat Information
+        body:
+          application/json: HeartbeatResponse
+/v1/tax/filings:
+  post:
+    displayName: submitTaxFiling
+    (amf-summary): Submition of tax filing data.
+    (amf-tags):
+      - Tax payment services
+    body:
+      application/json: TaxFilingSubmissionRequest
+    responses:
+      "400":
+        description: Bad Request - Validation Errors
+        body:
+          application/json:
+            (amf-and):
+              -
+                (amf-and):
+                  -
+                    type: object
+                    properties:
+                      message:
+                        description: The user friendly message explaining the error
+                        example:
+                          strict: false
+                          value: Unexpected error
+                        type: string
+                        required: true
+                  -
+                    type: object
+                    properties:
+                      http_status_code:
+                        description: The HTTP Status code
+                        example:
+                          strict: false
+                          value: 400
+                        type: integer
+                        minimum: 100
+                        maximum: 600
+                        required: true
+                      response_code:
+                        description: The application response code to identify the error
+                        example:
+                          strict: false
+                          value: 21026
+                        type: integer
+                        required: true
+                type: any
+              -
+                type: object
+                properties:
+                  violations?:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        code:
+                          description: The application response code to identify the error
+                          example:
+                            strict: false
+                            value: 41026
+                          type: integer
+                          required: true
+                        message:
+                          description: The user friendly message explaining the error
+                          example:
+                            strict: false
+                            value: "body.group_header: Field message_identification is required."
+                          type: string
+                          required: true
+                        source?:
+                          description: The identifier of invalid data element
+                          example:
+                            strict: false
+                            value: body.group_header
+                          type: string
+            type: any
+      "401":
+        description: Unauthorized
+        body:
+          application/json:
+            type: object
+            properties:
+              message:
+                description: The user friendly message explaining the error
+                example:
+                  strict: false
+                  value: Unexpected error
+                type: string
+                required: true
+      "403":
+        description: Forbidden
+        body:
+          application/json:
+            type: object
+            properties:
+              message:
+                description: The user friendly message explaining the error
+                example:
+                  strict: false
+                  value: Unexpected error
+                type: string
+                required: true
+      "404":
+        description: Resource Not Found
+        body:
+          application/json:
+            type: object
+            properties:
+              message:
+                description: The user friendly message explaining the error
+                example:
+                  strict: false
+                  value: Unexpected error
+                type: string
+                required: true
+      "429":
+        description: Too many requests; blocked due to rate limiting
+        body:
+          application/json:
+            type: object
+            properties:
+              message:
+                description: The user friendly message explaining the error
+                example:
+                  strict: false
+                  value: Unexpected error
+                type: string
+                required: true
+      "500":
+        description: Internal Server Error
+        body:
+          application/json:
+            (amf-and):
+              -
+                type: object
+                properties:
+                  message:
+                    description: The user friendly message explaining the error
+                    example:
+                      strict: false
+                      value: Unexpected error
+                    type: string
+                    required: true
+              -
+                type: object
+                properties:
+                  http_status_code:
+                    description: The HTTP Status code
+                    example:
+                      strict: false
+                      value: 400
+                    type: integer
+                    minimum: 100
+                    maximum: 600
+                    required: true
+                  response_code:
+                    description: The application response code to identify the error
+                    example:
+                      strict: false
+                      value: 21026
+                    type: integer
+                    required: true
+            type: any
+      "503":
+        description: Service Unavailable
+        body:
+          application/json:
+            type: object
+            properties:
+              message:
+                description: The user friendly message explaining the error
+                example:
+                  strict: false
+                  value: Unexpected error
+                type: string
+                required: true
+      "504":
+        description: Gateway Timeout
+        body:
+          application/json:
+            type: object
+            properties:
+              message:
+                description: The user friendly message explaining the error
+                example:
+                  strict: false
+                  value: Unexpected error
+                type: string
+                required: true
+      "201":
+        description: Submission result of a tax filing.
+        body:
+          application/json: TaxFilingSubmissionResponse
+    securedBy:
+      - api_key
+      - c1_authentication
+/v1/tax/forms:
+  get:
+    displayName: listTaxForms
+    (amf-summary): This resource provides the list of tax forms. The result can be filtered with optional query parameters.
+    (amf-tags):
+      - Tax filing services
+    queryParameters:
+      group:
+        description: The group of a tax form - FEDERAL or PROVICIAL.
+        required: false
+        type: string
+      jurisdiction:
+        description: The jurisdiction of a form. E.g. CRA (for federal forms), AB (for Alberta forms). See property jurisdiction on TaxForm model for available values.
+        required: false
+        type: string
+      payment_type:
+        description: The ID of payment type of a form. See TaxPaymentTypeId model for available values.
+        required: false
+        type: string
+      tax_type:
+        description: The ID of tax type. See TaxTypeId model for available values.
+        required: false
+        type: string
+      cra_category:
+        description: CRA category of a forms. Applicable for federal tax forms only. See CraTaxCategoryId model for available values.
+        required: false
+        type: string
+    responses:
+      "400":
+        description: Bad Request - Validation Errors
+        body:
+          application/json:
+            (amf-and):
+              -
+                (amf-and):
+                  -
+                    type: object
+                    properties:
+                      message:
+                        description: The user friendly message explaining the error
+                        example:
+                          strict: false
+                          value: Unexpected error
+                        type: string
+                        required: true
+                  -
+                    type: object
+                    properties:
+                      http_status_code:
+                        description: The HTTP Status code
+                        example:
+                          strict: false
+                          value: 400
+                        type: integer
+                        minimum: 100
+                        maximum: 600
+                        required: true
+                      response_code:
+                        description: The application response code to identify the error
+                        example:
+                          strict: false
+                          value: 21026
+                        type: integer
+                        required: true
+                type: any
+              -
+                type: object
+                properties:
+                  violations?:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        code:
+                          description: The application response code to identify the error
+                          example:
+                            strict: false
+                            value: 41026
+                          type: integer
+                          required: true
+                        message:
+                          description: The user friendly message explaining the error
+                          example:
+                            strict: false
+                            value: "body.group_header: Field message_identification is required."
+                          type: string
+                          required: true
+                        source?:
+                          description: The identifier of invalid data element
+                          example:
+                            strict: false
+                            value: body.group_header
+                          type: string
+            type: any
+      "401":
+        description: Unauthorized
+        body:
+          application/json:
+            type: object
+            properties:
+              message:
+                description: The user friendly message explaining the error
+                example:
+                  strict: false
+                  value: Unexpected error
+                type: string
+                required: true
+      "403":
+        description: Forbidden
+        body:
+          application/json:
+            type: object
+            properties:
+              message:
+                description: The user friendly message explaining the error
+                example:
+                  strict: false
+                  value: Unexpected error
+                type: string
+                required: true
+      "404":
+        description: Resource Not Found
+        body:
+          application/json:
+            type: object
+            properties:
+              message:
+                description: The user friendly message explaining the error
+                example:
+                  strict: false
+                  value: Unexpected error
+                type: string
+                required: true
+      "429":
+        description: Too many requests; blocked due to rate limiting
+        body:
+          application/json:
+            type: object
+            properties:
+              message:
+                description: The user friendly message explaining the error
+                example:
+                  strict: false
+                  value: Unexpected error
+                type: string
+                required: true
+      "500":
+        description: Internal Server Error
+        body:
+          application/json:
+            (amf-and):
+              -
+                type: object
+                properties:
+                  message:
+                    description: The user friendly message explaining the error
+                    example:
+                      strict: false
+                      value: Unexpected error
+                    type: string
+                    required: true
+              -
+                type: object
+                properties:
+                  http_status_code:
+                    description: The HTTP Status code
+                    example:
+                      strict: false
+                      value: 400
+                    type: integer
+                    minimum: 100
+                    maximum: 600
+                    required: true
+                  response_code:
+                    description: The application response code to identify the error
+                    example:
+                      strict: false
+                      value: 21026
+                    type: integer
+                    required: true
+            type: any
+      "503":
+        description: Service Unavailable
+        body:
+          application/json:
+            type: object
+            properties:
+              message:
+                description: The user friendly message explaining the error
+                example:
+                  strict: false
+                  value: Unexpected error
+                type: string
+                required: true
+      "504":
+        description: Gateway Timeout
+        body:
+          application/json:
+            type: object
+            properties:
+              message:
+                description: The user friendly message explaining the error
+                example:
+                  strict: false
+                  value: Unexpected error
+                type: string
+                required: true
+      "200":
+        description: The list of tax forms.
+        body:
+          application/json:
+            type: array
+            examples:
+              list-tax-forms:
+                strict: false
+                value:
+                  -
+                    tax_form_id: RC158_TT34
+                    vendor_number: 12408
+                    description: Air Travelers Security Charge - Payment on Filing
+                    form_number: RC158
+                    tax_code: TT34
+                    tax_group: FEDERAL
+                    cra_category_id: RG
+                    payment_type_id: PAYMENT_ON_FILING
+                    tax_type_id: AIR_TRAVELERS_SECURITY_CHARGE
+                    jurisdiction: CRA
+                    filing_only: false
+                  -
+                    tax_form_id: GST34_TT20
+                    vendor_number: 4006
+                    description: GST/HST - Payment on Filing
+                    form_number: GST34
+                    tax_code: TT20
+                    tax_group: FEDERAL
+                    cra_category_id: RT
+                    payment_type_id: FILING_AND_REMITTANCE
+                    tax_type_id: GST_HST
+                    jurisdiction: CRA
+                    filing_only: true
+                  -
+                    tax_form_id: GST62-1_TT20
+                    vendor_number: 4006
+                    description: GST/HST - Payment on Filing
+                    form_number: GST62-1
+                    tax_code: TT20
+                    tax_group: FEDERAL
+                    cra_category_id: RT
+                    payment_type_id: FILING_AND_REMITTANCE
+                    tax_type_id: GST_HST
+                    jurisdiction: CRA
+                    filing_only: true
+                  -
+                    tax_form_id: PD101_TT06
+                    vendor_number: 12437
+                    description: Pier Deficiencies - Installment
+                    form_number: PD101
+                    tax_code: TT06
+                    tax_group: FEDERAL
+                    cra_category_id: RP
+                    payment_type_id: BLANK
+                    tax_type_id: PAYROLL_TAX
+                    jurisdiction: CRA
+                    filing_only: false
+            items: TaxForm
+    securedBy:
+      - api_key
+      - c1_authentication
+/v1/tax/filings/history:
+  get:
+    displayName: listTaxFilingsHistory
+    (amf-summary): This resource provides access to the history of submitted tax filings and payments.
+    (amf-tags):
+      - Tax payment services
+    queryParameters:
+      member_number:
+        description: The member number of the tax payment.
+        required: false
+        type: integer
+      business_number:
+        description: The business account number of the tax filing.
+        required: false
+        type: string
+      trace_number:
+        description: The trace number (confirmation ID) of the tax payment.
+        required: false
+        type: integer
+      from_date:
+        description: The search range start date.
+        required: false
+        type: ISODate
+      to_date:
+        description: The search range end date.
+        required: false
+        type: ISODate
+      min_amount:
+        description: The minimun value of paid amount. This parameter combined with 'max_amount' allows to create search range for amount. Use the same value for mimimun and maximum for exact match.
+        required: false
+        type: number
+      max_amount:
+        description: The maximum value of paid amount. This parameter combined with 'min_amount' allows to create search range for amount. Use the same value for mimimun and maximum for exact match.
+        required: false
+        type: number
+      tax_form_id:
+        description: The tax form number of the tax filing.
+        required: false
+        type: string
+      vendor_number:
+        description: The tax code of the tax filing.
+        required: false
+        type: integer
+      offset:
+        description: The zero-based number of items to skip in total search result. This parameter combined with 'max_response_items' allows to paginate total result. Default value is 0.
+        required: false
+        type: integer
+      max_response_items:
+        description: Maximum number of response items to be returned. Default number is 50. Maximum number is 500.
+        required: false
+        type: integer
+    responses:
+      "400":
+        description: Bad Request - Validation Errors
+        body:
+          application/json:
+            (amf-and):
+              -
+                (amf-and):
+                  -
+                    type: object
+                    properties:
+                      message:
+                        description: The user friendly message explaining the error
+                        example:
+                          strict: false
+                          value: Unexpected error
+                        type: string
+                        required: true
+                  -
+                    type: object
+                    properties:
+                      http_status_code:
+                        description: The HTTP Status code
+                        example:
+                          strict: false
+                          value: 400
+                        type: integer
+                        minimum: 100
+                        maximum: 600
+                        required: true
+                      response_code:
+                        description: The application response code to identify the error
+                        example:
+                          strict: false
+                          value: 21026
+                        type: integer
+                        required: true
+                type: any
+              -
+                type: object
+                properties:
+                  violations?:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        code:
+                          description: The application response code to identify the error
+                          example:
+                            strict: false
+                            value: 41026
+                          type: integer
+                          required: true
+                        message:
+                          description: The user friendly message explaining the error
+                          example:
+                            strict: false
+                            value: "body.group_header: Field message_identification is required."
+                          type: string
+                          required: true
+                        source?:
+                          description: The identifier of invalid data element
+                          example:
+                            strict: false
+                            value: body.group_header
+                          type: string
+            type: any
+      "401":
+        description: Unauthorized
+        body:
+          application/json:
+            type: object
+            properties:
+              message:
+                description: The user friendly message explaining the error
+                example:
+                  strict: false
+                  value: Unexpected error
+                type: string
+                required: true
+      "403":
+        description: Forbidden
+        body:
+          application/json:
+            type: object
+            properties:
+              message:
+                description: The user friendly message explaining the error
+                example:
+                  strict: false
+                  value: Unexpected error
+                type: string
+                required: true
+      "404":
+        description: Resource Not Found
+        body:
+          application/json:
+            type: object
+            properties:
+              message:
+                description: The user friendly message explaining the error
+                example:
+                  strict: false
+                  value: Unexpected error
+                type: string
+                required: true
+      "429":
+        description: Too many requests; blocked due to rate limiting
+        body:
+          application/json:
+            type: object
+            properties:
+              message:
+                description: The user friendly message explaining the error
+                example:
+                  strict: false
+                  value: Unexpected error
+                type: string
+                required: true
+      "500":
+        description: Internal Server Error
+        body:
+          application/json:
+            (amf-and):
+              -
+                type: object
+                properties:
+                  message:
+                    description: The user friendly message explaining the error
+                    example:
+                      strict: false
+                      value: Unexpected error
+                    type: string
+                    required: true
+              -
+                type: object
+                properties:
+                  http_status_code:
+                    description: The HTTP Status code
+                    example:
+                      strict: false
+                      value: 400
+                    type: integer
+                    minimum: 100
+                    maximum: 600
+                    required: true
+                  response_code:
+                    description: The application response code to identify the error
+                    example:
+                      strict: false
+                      value: 21026
+                    type: integer
+                    required: true
+            type: any
+      "503":
+        description: Service Unavailable
+        body:
+          application/json:
+            type: object
+            properties:
+              message:
+                description: The user friendly message explaining the error
+                example:
+                  strict: false
+                  value: Unexpected error
+                type: string
+                required: true
+      "504":
+        description: Gateway Timeout
+        body:
+          application/json:
+            type: object
+            properties:
+              message:
+                description: The user friendly message explaining the error
+                example:
+                  strict: false
+                  value: Unexpected error
+                type: string
+                required: true
+      "200":
+        description: List of previously submitted tax filings (tax forms) and payments
+        body:
+          application/json: TaxFilingHistoryPage
+    securedBy:
+      - api_key
+      - c1_authentication
+/v1/tax/filings/validation:
+  post:
+    displayName: validateTaxFiling
+    (amf-summary): This resource performs validation of the tax filing data.
+    (amf-tags):
+      - Tax payment services
+    body:
+      application/json: TaxFilingValidationRequest
+    responses:
+      "400":
+        description: Bad Request - Validation Errors
+        body:
+          application/json:
+            (amf-and):
+              -
+                (amf-and):
+                  -
+                    type: object
+                    properties:
+                      message:
+                        description: The user friendly message explaining the error
+                        example:
+                          strict: false
+                          value: Unexpected error
+                        type: string
+                        required: true
+                  -
+                    type: object
+                    properties:
+                      http_status_code:
+                        description: The HTTP Status code
+                        example:
+                          strict: false
+                          value: 400
+                        type: integer
+                        minimum: 100
+                        maximum: 600
+                        required: true
+                      response_code:
+                        description: The application response code to identify the error
+                        example:
+                          strict: false
+                          value: 21026
+                        type: integer
+                        required: true
+                type: any
+              -
+                type: object
+                properties:
+                  violations?:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        code:
+                          description: The application response code to identify the error
+                          example:
+                            strict: false
+                            value: 41026
+                          type: integer
+                          required: true
+                        message:
+                          description: The user friendly message explaining the error
+                          example:
+                            strict: false
+                            value: "body.group_header: Field message_identification is required."
+                          type: string
+                          required: true
+                        source?:
+                          description: The identifier of invalid data element
+                          example:
+                            strict: false
+                            value: body.group_header
+                          type: string
+            type: any
+      "401":
+        description: Unauthorized
+        body:
+          application/json:
+            type: object
+            properties:
+              message:
+                description: The user friendly message explaining the error
+                example:
+                  strict: false
+                  value: Unexpected error
+                type: string
+                required: true
+      "403":
+        description: Forbidden
+        body:
+          application/json:
+            type: object
+            properties:
+              message:
+                description: The user friendly message explaining the error
+                example:
+                  strict: false
+                  value: Unexpected error
+                type: string
+                required: true
+      "404":
+        description: Resource Not Found
+        body:
+          application/json:
+            type: object
+            properties:
+              message:
+                description: The user friendly message explaining the error
+                example:
+                  strict: false
+                  value: Unexpected error
+                type: string
+                required: true
+      "429":
+        description: Too many requests; blocked due to rate limiting
+        body:
+          application/json:
+            type: object
+            properties:
+              message:
+                description: The user friendly message explaining the error
+                example:
+                  strict: false
+                  value: Unexpected error
+                type: string
+                required: true
+      "500":
+        description: Internal Server Error
+        body:
+          application/json:
+            (amf-and):
+              -
+                type: object
+                properties:
+                  message:
+                    description: The user friendly message explaining the error
+                    example:
+                      strict: false
+                      value: Unexpected error
+                    type: string
+                    required: true
+              -
+                type: object
+                properties:
+                  http_status_code:
+                    description: The HTTP Status code
+                    example:
+                      strict: false
+                      value: 400
+                    type: integer
+                    minimum: 100
+                    maximum: 600
+                    required: true
+                  response_code:
+                    description: The application response code to identify the error
+                    example:
+                      strict: false
+                      value: 21026
+                    type: integer
+                    required: true
+            type: any
+      "503":
+        description: Service Unavailable
+        body:
+          application/json:
+            type: object
+            properties:
+              message:
+                description: The user friendly message explaining the error
+                example:
+                  strict: false
+                  value: Unexpected error
+                type: string
+                required: true
+      "504":
+        description: Gateway Timeout
+        body:
+          application/json:
+            type: object
+            properties:
+              message:
+                description: The user friendly message explaining the error
+                example:
+                  strict: false
+                  value: Unexpected error
+                type: string
+                required: true
+      "200":
+        description: Validation result of a tax filing (tax form)
+        body:
+          application/json: TaxFilingValidationResponse
+    securedBy:
+      - api_key
+      - c1_authentication
+/v1/tax/forms/cra-categories:
+  get:
+    displayName: listCraTaxCategories
+    (amf-summary): This resource provides the list of tax form categories defined by CRA. It can be used for rendering dropdown list on tax form search screen.
+    (amf-tags):
+      - Tax filing services
+    responses:
+      "400":
+        description: Bad Request - Validation Errors
+        body:
+          application/json:
+            (amf-and):
+              -
+                (amf-and):
+                  -
+                    type: object
+                    properties:
+                      message:
+                        description: The user friendly message explaining the error
+                        example:
+                          strict: false
+                          value: Unexpected error
+                        type: string
+                        required: true
+                  -
+                    type: object
+                    properties:
+                      http_status_code:
+                        description: The HTTP Status code
+                        example:
+                          strict: false
+                          value: 400
+                        type: integer
+                        minimum: 100
+                        maximum: 600
+                        required: true
+                      response_code:
+                        description: The application response code to identify the error
+                        example:
+                          strict: false
+                          value: 21026
+                        type: integer
+                        required: true
+                type: any
+              -
+                type: object
+                properties:
+                  violations?:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        code:
+                          description: The application response code to identify the error
+                          example:
+                            strict: false
+                            value: 41026
+                          type: integer
+                          required: true
+                        message:
+                          description: The user friendly message explaining the error
+                          example:
+                            strict: false
+                            value: "body.group_header: Field message_identification is required."
+                          type: string
+                          required: true
+                        source?:
+                          description: The identifier of invalid data element
+                          example:
+                            strict: false
+                            value: body.group_header
+                          type: string
+            type: any
+      "401":
+        description: Unauthorized
+        body:
+          application/json:
+            type: object
+            properties:
+              message:
+                description: The user friendly message explaining the error
+                example:
+                  strict: false
+                  value: Unexpected error
+                type: string
+                required: true
+      "403":
+        description: Forbidden
+        body:
+          application/json:
+            type: object
+            properties:
+              message:
+                description: The user friendly message explaining the error
+                example:
+                  strict: false
+                  value: Unexpected error
+                type: string
+                required: true
+      "404":
+        description: Resource Not Found
+        body:
+          application/json:
+            type: object
+            properties:
+              message:
+                description: The user friendly message explaining the error
+                example:
+                  strict: false
+                  value: Unexpected error
+                type: string
+                required: true
+      "429":
+        description: Too many requests; blocked due to rate limiting
+        body:
+          application/json:
+            type: object
+            properties:
+              message:
+                description: The user friendly message explaining the error
+                example:
+                  strict: false
+                  value: Unexpected error
+                type: string
+                required: true
+      "500":
+        description: Internal Server Error
+        body:
+          application/json:
+            (amf-and):
+              -
+                type: object
+                properties:
+                  message:
+                    description: The user friendly message explaining the error
+                    example:
+                      strict: false
+                      value: Unexpected error
+                    type: string
+                    required: true
+              -
+                type: object
+                properties:
+                  http_status_code:
+                    description: The HTTP Status code
+                    example:
+                      strict: false
+                      value: 400
+                    type: integer
+                    minimum: 100
+                    maximum: 600
+                    required: true
+                  response_code:
+                    description: The application response code to identify the error
+                    example:
+                      strict: false
+                      value: 21026
+                    type: integer
+                    required: true
+            type: any
+      "503":
+        description: Service Unavailable
+        body:
+          application/json:
+            type: object
+            properties:
+              message:
+                description: The user friendly message explaining the error
+                example:
+                  strict: false
+                  value: Unexpected error
+                type: string
+                required: true
+      "504":
+        description: Gateway Timeout
+        body:
+          application/json:
+            type: object
+            properties:
+              message:
+                description: The user friendly message explaining the error
+                example:
+                  strict: false
+                  value: Unexpected error
+                type: string
+                required: true
+      "200":
+        description: The list of all tax form CRA categories.
+        body:
+          application/json:
+            type: array
+            items: CraTaxCategory
+    securedBy:
+      - api_key
+      - c1_authentication
+/v1/tax/forms/payment-types:
+  get:
+    displayName: listTaxFormPaymentTypes
+    (amf-summary): This resource provides the list of tax form payment types. It can be used for rendering dropdown list on tax form search screen.
+    (amf-tags):
+      - Tax filing services
+    responses:
+      "400":
+        description: Bad Request - Validation Errors
+        body:
+          application/json:
+            (amf-and):
+              -
+                (amf-and):
+                  -
+                    type: object
+                    properties:
+                      message:
+                        description: The user friendly message explaining the error
+                        example:
+                          strict: false
+                          value: Unexpected error
+                        type: string
+                        required: true
+                  -
+                    type: object
+                    properties:
+                      http_status_code:
+                        description: The HTTP Status code
+                        example:
+                          strict: false
+                          value: 400
+                        type: integer
+                        minimum: 100
+                        maximum: 600
+                        required: true
+                      response_code:
+                        description: The application response code to identify the error
+                        example:
+                          strict: false
+                          value: 21026
+                        type: integer
+                        required: true
+                type: any
+              -
+                type: object
+                properties:
+                  violations?:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        code:
+                          description: The application response code to identify the error
+                          example:
+                            strict: false
+                            value: 41026
+                          type: integer
+                          required: true
+                        message:
+                          description: The user friendly message explaining the error
+                          example:
+                            strict: false
+                            value: "body.group_header: Field message_identification is required."
+                          type: string
+                          required: true
+                        source?:
+                          description: The identifier of invalid data element
+                          example:
+                            strict: false
+                            value: body.group_header
+                          type: string
+            type: any
+      "401":
+        description: Unauthorized
+        body:
+          application/json:
+            type: object
+            properties:
+              message:
+                description: The user friendly message explaining the error
+                example:
+                  strict: false
+                  value: Unexpected error
+                type: string
+                required: true
+      "403":
+        description: Forbidden
+        body:
+          application/json:
+            type: object
+            properties:
+              message:
+                description: The user friendly message explaining the error
+                example:
+                  strict: false
+                  value: Unexpected error
+                type: string
+                required: true
+      "404":
+        description: Resource Not Found
+        body:
+          application/json:
+            type: object
+            properties:
+              message:
+                description: The user friendly message explaining the error
+                example:
+                  strict: false
+                  value: Unexpected error
+                type: string
+                required: true
+      "429":
+        description: Too many requests; blocked due to rate limiting
+        body:
+          application/json:
+            type: object
+            properties:
+              message:
+                description: The user friendly message explaining the error
+                example:
+                  strict: false
+                  value: Unexpected error
+                type: string
+                required: true
+      "500":
+        description: Internal Server Error
+        body:
+          application/json:
+            (amf-and):
+              -
+                type: object
+                properties:
+                  message:
+                    description: The user friendly message explaining the error
+                    example:
+                      strict: false
+                      value: Unexpected error
+                    type: string
+                    required: true
+              -
+                type: object
+                properties:
+                  http_status_code:
+                    description: The HTTP Status code
+                    example:
+                      strict: false
+                      value: 400
+                    type: integer
+                    minimum: 100
+                    maximum: 600
+                    required: true
+                  response_code:
+                    description: The application response code to identify the error
+                    example:
+                      strict: false
+                      value: 21026
+                    type: integer
+                    required: true
+            type: any
+      "503":
+        description: Service Unavailable
+        body:
+          application/json:
+            type: object
+            properties:
+              message:
+                description: The user friendly message explaining the error
+                example:
+                  strict: false
+                  value: Unexpected error
+                type: string
+                required: true
+      "504":
+        description: Gateway Timeout
+        body:
+          application/json:
+            type: object
+            properties:
+              message:
+                description: The user friendly message explaining the error
+                example:
+                  strict: false
+                  value: Unexpected error
+                type: string
+                required: true
+      "200":
+        description: The list of all tax form payment types.
+        body:
+          application/json:
+            type: array
+            examples:
+              list-tax-form-payment-types:
+                strict: false
+                value:
+                  -
+                    id: AMOUNT_OWING
+                    name: Amount Owing
+                  -
+                    id: BALANCE_DUE
+                    name: Balance Due
+                  -
+                    id: BLANK
+                    name: Blank
+                  -
+                    id: CURRENT_YEAR
+                    name: Current Year
+                  -
+                    id: FILING_AND_REMITTANCE
+                    name: Filing & Remittance
+                  -
+                    id: INTERIM_INSTALLMENT
+                    name: Interim/Installment
+                  -
+                    id: PAYMENT_ON_FILING
+                    name: Payment on Filing
+                  -
+                    id: REGULAR
+                    name: Regular
+            items: TaxPaymentType
+    securedBy:
+      - api_key
+      - c1_authentication
+/v1/tax/forms/{taxFormId}/schema:
+  get:
+    displayName: getTaxFormSchema
+    (amf-summary): This resource returns data schema for selected tax form. The schema includes list of fields with metadata. It can be used for rendering tax form and collecting data for tax filing.
+    (amf-tags):
+      - Tax filing services
+    queryParameters:
+      version:
+        description: The version of the tax form schema. If omitted, the latest version returned.
+        required: false
+        type: integer
+    responses:
+      "400":
+        description: Bad Request - Validation Errors
+        body:
+          application/json:
+            (amf-and):
+              -
+                (amf-and):
+                  -
+                    type: object
+                    properties:
+                      message:
+                        description: The user friendly message explaining the error
+                        example:
+                          strict: false
+                          value: Unexpected error
+                        type: string
+                        required: true
+                  -
+                    type: object
+                    properties:
+                      http_status_code:
+                        description: The HTTP Status code
+                        example:
+                          strict: false
+                          value: 400
+                        type: integer
+                        minimum: 100
+                        maximum: 600
+                        required: true
+                      response_code:
+                        description: The application response code to identify the error
+                        example:
+                          strict: false
+                          value: 21026
+                        type: integer
+                        required: true
+                type: any
+              -
+                type: object
+                properties:
+                  violations?:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        code:
+                          description: The application response code to identify the error
+                          example:
+                            strict: false
+                            value: 41026
+                          type: integer
+                          required: true
+                        message:
+                          description: The user friendly message explaining the error
+                          example:
+                            strict: false
+                            value: "body.group_header: Field message_identification is required."
+                          type: string
+                          required: true
+                        source?:
+                          description: The identifier of invalid data element
+                          example:
+                            strict: false
+                            value: body.group_header
+                          type: string
+            type: any
+      "401":
+        description: Unauthorized
+        body:
+          application/json:
+            type: object
+            properties:
+              message:
+                description: The user friendly message explaining the error
+                example:
+                  strict: false
+                  value: Unexpected error
+                type: string
+                required: true
+      "403":
+        description: Forbidden
+        body:
+          application/json:
+            type: object
+            properties:
+              message:
+                description: The user friendly message explaining the error
+                example:
+                  strict: false
+                  value: Unexpected error
+                type: string
+                required: true
+      "404":
+        description: Resource Not Found
+        body:
+          application/json:
+            type: object
+            properties:
+              message:
+                description: The user friendly message explaining the error
+                example:
+                  strict: false
+                  value: Unexpected error
+                type: string
+                required: true
+      "429":
+        description: Too many requests; blocked due to rate limiting
+        body:
+          application/json:
+            type: object
+            properties:
+              message:
+                description: The user friendly message explaining the error
+                example:
+                  strict: false
+                  value: Unexpected error
+                type: string
+                required: true
+      "500":
+        description: Internal Server Error
+        body:
+          application/json:
+            (amf-and):
+              -
+                type: object
+                properties:
+                  message:
+                    description: The user friendly message explaining the error
+                    example:
+                      strict: false
+                      value: Unexpected error
+                    type: string
+                    required: true
+              -
+                type: object
+                properties:
+                  http_status_code:
+                    description: The HTTP Status code
+                    example:
+                      strict: false
+                      value: 400
+                    type: integer
+                    minimum: 100
+                    maximum: 600
+                    required: true
+                  response_code:
+                    description: The application response code to identify the error
+                    example:
+                      strict: false
+                      value: 21026
+                    type: integer
+                    required: true
+            type: any
+      "503":
+        description: Service Unavailable
+        body:
+          application/json:
+            type: object
+            properties:
+              message:
+                description: The user friendly message explaining the error
+                example:
+                  strict: false
+                  value: Unexpected error
+                type: string
+                required: true
+      "504":
+        description: Gateway Timeout
+        body:
+          application/json:
+            type: object
+            properties:
+              message:
+                description: The user friendly message explaining the error
+                example:
+                  strict: false
+                  value: Unexpected error
+                type: string
+                required: true
+      "200":
+        description: The schema definitition of a tax form.
+        body:
+          application/json: TaxFormSchema
+    securedBy:
+      - api_key
+      - c1_authentication
+  uriParameters:
+    taxFormId:
+      description: The tax form unique identifier. Must match tax_form_id of TaxForm model.
+      type: string
